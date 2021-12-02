@@ -2,7 +2,7 @@
 # Test dependencies
 set(DEPENDENCIES JsonAPI TestAPI FsAPI)
 
-api_add_test_executable(LibraryAPI 32768 "${DEPENDENCIES}")
+api_add_test_executable(DesignAPI 32768 "${DEPENDENCIES}")
 
 
 

@@ -1,6 +1,6 @@
 
 
 set(SOURCES
-	LibraryClass.cpp
+	Card.cpp
 	PARENT_SCOPE
 	)
