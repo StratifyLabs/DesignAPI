@@ -5,7 +5,7 @@
 
 #include <api/api.hpp>
 
-#include <lvgl/ObjectAccess.hpp>
+#include <lvgl/Window.hpp>
 
 namespace design {
 
@@ -13,9 +13,9 @@ class FileSystemWindow : public lvgl::ObjectAccess<FileSystemWindow> {
 public:
   enum class ExitStatus { null, closed, selected, cancelled };
 
-  static const char * root_drive_path();
+  static const char *root_drive_path();
 
-  class Data : public UserDataAccess<Data> {
+  class Data : public lvgl::UserDataAccess<Data> {
   public:
     explicit Data(const char *name = "") : UserDataBase(name) {}
 
@@ -35,7 +35,9 @@ public:
     API_PMAZ(path, Data, var::PathString, {});
   };
 
-  explicit FileSystemWindow(Data &data, lv_coord_t header_height = 15_percent);
+  explicit FileSystemWindow(
+    Data &data,
+    lv_coord_t header_height = lvgl::Percent(15).value());
   explicit FileSystemWindow(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t *get_class() { return api()->window_class; }
@@ -56,7 +58,7 @@ private:
     static constexpr auto show_hidden_checkbox = "ShowHidden";
   };
 
-  class TileData : public UserDataAccess<TileData> {
+  class TileData : public lvgl::UserDataAccess<TileData> {
   public:
     explicit TileData(const char *path) : UserDataBase(""), m_path(path) {}
 
@@ -64,28 +66,32 @@ private:
     API_AC(TileData, var::PathString, path);
   };
 
-  API_NO_DISCARD Container get_header() const {
-    return Container(api()->win_get_header(m_object));
+  API_NO_DISCARD lvgl::Generic get_header() const {
+    return lvgl::Generic(api()->win_get_header(m_object));
   }
-  API_NO_DISCARD Container get_content() const {
-    return Container(api()->win_get_content(m_object));
+  API_NO_DISCARD lvgl::Generic get_content() const {
+    return lvgl::Generic(api()->win_get_content(m_object));
   }
 
-  static void configure_details(Container container);
-  static void configure_list(Container container);
+  static void configure_details(lvgl::Generic container);
+  static void configure_list(lvgl::Generic container);
 
-  static var::PathString get_next_path(const var::PathString &path, const char *entry);
+  static var::PathString
+  get_next_path(const var::PathString &path, const char *entry);
 
-  static void set_back_button_label(const Window &window, const char *symbol);
-  static Label get_title_label(const Window &window);
-  static Window get_window(Object object) { return object.find_parent<Window>(); }
+  static void
+  set_back_button_label(const lvgl::Window &window, const char *symbol);
+  static lvgl::Label get_title_label(const lvgl::Window &window);
+  static lvgl::Window get_window(Object object) {
+    return object.find_parent<lvgl::Window>();
+  }
 };
 
-}
+} // namespace design
 
 namespace printer {
 class Printer;
-//Add operators to send any important debug tracing data to a printer
+// Add operators to send any important debug tracing data to a printer
 Printer &operator<<(Printer &printer, const design::FileSystemWindow &a);
 } // namespace printer
 

@@ -20,7 +20,7 @@ FormList::FormList(Data& data) {
 FormList &FormList::add_item(const ItemData &item_data) {
   auto object = api()->list_add_btn(m_object, item_data.symbol, item_data.name());
   set_user_data(object, item_data.cast_as_name());
-  auto button = Container(object).get<Button>();
+  auto button = Button(object);
 
   button.add_flag(Flags::event_bubble)
     .add_event_callback(

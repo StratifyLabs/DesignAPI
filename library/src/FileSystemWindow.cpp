@@ -11,6 +11,11 @@
 #include <lvgl/Table.hpp>
 #include <lvgl/TileView.hpp>
 
+#include <fs/Path.hpp>
+#include <fs/FileSystem.hpp>
+
+#include "design/Grid.hpp"
+#include "design/FormList.hpp"
 #include "design/FileSystemWindow.hpp"
 
 #ifdef __win32
@@ -35,7 +40,7 @@ FileSystemWindow::FileSystemWindow(Data &data, lv_coord_t header_height) {
 
   data.set_path(data.base_path);
 
-  auto window = Container(m_object).get<Window>();
+  auto window = Generic(m_object).get<Window>();
 
   window.clear_flag(Window::Flags::scrollable)
     .add_title(Names::window_title, data.base_path, [](Label label) {
@@ -87,7 +92,7 @@ FileSystemWindow::FileSystemWindow(Data &data, lv_coord_t header_height) {
           target_name == Names::home_button || target_name == Names::root_drive_button) {
           auto tile_view = event.current_target().find<TileView>(Names::tile_view);
           tile_view.set_tile(TileView::Location());
-          auto home_tile = tile_view.get_tile(TileView::Location()).get<Container>();
+          auto home_tile = tile_view.get_tile(TileView::Location()).get<Generic>();
           const auto folder = [&]() -> var::PathString {
             if (target_name == Names::home_button) {
               const auto *home = getenv("HOME");
@@ -148,7 +153,7 @@ Label FileSystemWindow::get_title_label(const Window &window) {
   return window.find<Label>(Names::window_title);
 }
 
-void FileSystemWindow::configure_details(Container container) {
+void FileSystemWindow::configure_details(Generic container) {
 
   container
     .clear_flag(Flags::scrollable)
@@ -166,7 +171,7 @@ void FileSystemWindow::configure_details(Container container) {
     .add(Table(Names::file_details_table).setup([](Table table) {
       auto *tile_data = table.get_parent().user_data<TileData>();
 
-      const auto width = Container::active_screen().get_width();
+      const auto width = lvgl::screen().get_width();
       const auto info = fs::FileSystem().get_info(tile_data->path());
       const auto file_type = info.is_file() ? "File" : "Device";
 
@@ -217,7 +222,7 @@ FileSystemWindow::get_next_path(const var::PathString &path, const char *entry) 
   return path / entry;
 }
 
-void FileSystemWindow::configure_list(Container container) {
+void FileSystemWindow::configure_list(Generic container) {
   // load the path
 
   container
@@ -322,7 +327,7 @@ void FileSystemWindow::configure_list(Container container) {
                           .set_type(item_type));
 
           if( count % 2 == 0 ) {
-            auto entry = list.find<Container>(item.cstring());
+            auto entry = list.find<Generic>(item.cstring());
             auto color = list.get_property_value(Property::background_color).color();
             //entry.set_background_color(color.darken(MixRatio::x10));
           }

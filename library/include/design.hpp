@@ -6,9 +6,12 @@
 namespace design {
 }
 
+#include "design/Card.hpp"
+#include "design/Grid.hpp"
 #include "design/CheckList.hpp"
 #include "design/FormList.hpp"
 #include "design/FileSystemWindow.hpp"
+#include "design/Typography.hpp"
 
 using namespace design;
 
