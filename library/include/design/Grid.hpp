@@ -18,7 +18,6 @@ public:
 class Container : public lvgl::ObjectAccess<Container> {
 public:
   explicit Container(const char *name = "");
-
   explicit Container(lv_obj_t *object) { m_object = object; }
   explicit Container(Object &object) { m_object = object.object(); }
 };

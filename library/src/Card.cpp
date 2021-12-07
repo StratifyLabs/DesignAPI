@@ -2,6 +2,7 @@
 
 #include <printer/Printer.hpp>
 
+#include <lvgl/Generic.hpp>
 #include <lvgl/Label.hpp>
 
 #include "design/Card.hpp"
@@ -16,56 +17,48 @@ using namespace lvgl;
 Card::Card(const char *name) {
   m_object = api()->obj_create(screen_object());
   set_user_data(m_object, name);
-  add_style("card");
+  ObjectAccess<Card>::add_style("card");
   set_width(size_from_content);
 }
 
-Card::Header::Header(const char *name, const char *title) {
-  m_object = api()->label_create(screen_object());
-  Label(m_object).set_text_static(name);
-  set_user_data(m_object, title);
+Card & Card::add_style(var::StringView value){
+  ObjectAccess<Card>::add_style(value | "_card");
 
-  add_style("card_header");
+  static constexpr auto name_list = { Names::header, Names::footer, Names::body };
+
+  for(const auto name : name_list){
+    auto generic = find<lvgl::Generic, IsAssertOnFail::no>(name);
+    if( generic.is_valid() ){
+      generic.add_style(value | "_" | name);
+    }
+  }
+
+  return *this;
 }
 
 Card::Header::Header(const char *title) {
   m_object = api()->label_create(screen_object());
   Label(m_object).set_text_static(title);
-  set_user_data(m_object, title);
+  set_user_data(m_object, Names::header);
 
   add_style("card_header");
-}
-
-Card::Footer::Footer(const char *name, const char * title){
-  m_object = api()->label_create(screen_object());
-  Label(m_object).set_text_static(title);
-  set_user_data(m_object, name);
-
-  add_style("card_footer");
 }
 
 Card::Footer::Footer(const char * title){
   m_object = api()->label_create(screen_object());
   Label(m_object).set_text_static(title);
-  set_user_data(m_object, "");
+  set_user_data(m_object, Names::footer);
 
   fill_width()
     .set_height(size_from_content);
   add_style("card_footer");
 }
 
-Card::Body::Body(const char *name, const char * text){
-  m_object = api()->label_create(screen_object());
-  api()->label_set_text_static(m_object, text);
-  set_user_data(m_object, name);
-
-  add_style("card_body");
-}
 
 Card::Body::Body(const char * text){
   m_object = api()->label_create(screen_object());
   api()->label_set_text_static(m_object, text);
-  set_user_data(m_object, "");
+  set_user_data(m_object, Names::body);
 
   add_style("card_body");
 }

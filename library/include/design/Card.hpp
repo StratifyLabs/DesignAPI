@@ -5,7 +5,7 @@
 
 #include <api/api.hpp>
 
-#include <lvgl/ObjectAccess.hpp>
+#include <lvgl/Label.hpp>
 
 namespace design {
 
@@ -17,7 +17,6 @@ public:
 
   class Header : public lvgl::ObjectAccess<Header>{
   public:
-    Header(const char *name, const char * title);
     explicit Header(const char * title);
     explicit Header(lv_obj_t *object) { m_object = object; }
     explicit Header(Object &object) { m_object = object.object(); }
@@ -25,7 +24,6 @@ public:
 
   class Body : public lvgl::ObjectAccess<Body>{
   public:
-    Body(const char *name, const char * text);
     explicit Body(const char * text);
     explicit Body(lv_obj_t *object) { m_object = object; }
     explicit Body(Object &object) { m_object = object.object(); }
@@ -33,11 +31,39 @@ public:
 
   class Footer : public lvgl::ObjectAccess<Footer>{
   public:
-    Footer(const char *name, const char * title);
     explicit Footer(const char * title);
     explicit Footer(lv_obj_t *object) { m_object = object; }
     explicit Footer(Object &object) { m_object = object.object(); }
   };
+
+  class Names {
+  public:
+    static constexpr auto header = "card_header";
+    static constexpr auto body = "card_body";
+    static constexpr auto footer = "card_footer";
+  };
+
+  Card & add_style(const lv_style_t * style){
+    return lvgl::ObjectAccess<Card>::add_style(style);
+  }
+
+  Card & add_style(const lvgl::Style & style){
+    return lvgl::ObjectAccess<Card>::add_style(style);
+  }
+
+  Card & add_style(var::StringView value);
+
+  lvgl::Label get_header() const {
+    return find<lvgl::Label>(Names::header);
+  }
+
+  lvgl::Label get_footer() const {
+    return find<lvgl::Label>(Names::header);
+  }
+
+  lvgl::Label get_body() const {
+    return find<lvgl::Label>(Names::header);
+  }
 
 private:
 
