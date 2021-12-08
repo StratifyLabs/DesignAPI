@@ -15,8 +15,7 @@ using namespace design;
 using namespace lvgl;
 
 Card::Card(const char *name) {
-  m_object = api()->obj_create(screen_object());
-  set_user_data(m_object, name);
+  construct_object(name);
   ObjectAccess<Card>::add_style("card");
   set_width(size_from_content);
 }

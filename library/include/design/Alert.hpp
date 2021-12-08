@@ -11,7 +11,9 @@ namespace design {
 
 class Alert : public lvgl::ObjectAccess<Alert> {
 public:
-  Alert();
+  explicit Alert(const char *name = "");
+  explicit Alert(lv_obj_t *object) { m_object = object; }
+  explicit Alert(Object &object) { m_object = object.object(); }
 
 private:
 

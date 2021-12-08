@@ -1,6 +1,8 @@
 
 
 set(SOURCES
+	Alert.cpp
+	Badge.cpp
 	Card.cpp
 	CheckList.cpp
 	FileSystemWindow.cpp

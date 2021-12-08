@@ -8,14 +8,12 @@ using namespace design;
 using namespace lvgl;
 
 NakedContainer::NakedContainer(const char *name) {
-  m_object = api()->obj_create(screen_object());
-  set_user_data(m_object, name);
+  construct_object(name);
   add_style("naked");
 }
 
 Container::Container(const char *name) {
-  m_object = api()->obj_create(screen_object());
-  set_user_data(m_object, name);
+  construct_object(name);
   add_style("container");
 }
 
@@ -30,9 +28,7 @@ const lvgl::Style &Row::get_style() {
 }
 
 Row::Row(const char *name) {
-  m_object = api()->label_create(screen_object());
-  api()->label_set_text_static(m_object, "");
-  set_user_data(m_object, name);
+  construct_object(name);
   set_flex_layout()
     .set_flex_flow(lvgl::FlexFlow::row)
     .set_flex_align(SetFlexAlign().set_main(lvgl::FlexAlign::start))
@@ -50,9 +46,7 @@ const lvgl::Style &Column::get_style() {
 }
 
 Column::Column(const char *name) {
-  m_object = api()->label_create(screen_object());
-  api()->label_set_text_static(m_object, "");
-  set_user_data(m_object, name);
+  construct_object(name);
 
   set_flex_layout()
     .set_flex_flow(FlexFlow::column)
