@@ -6,6 +6,7 @@
 namespace design {
 }
 
+#include "design/Badge.hpp"
 #include "design/Card.hpp"
 #include "design/Grid.hpp"
 #include "design/CheckList.hpp"

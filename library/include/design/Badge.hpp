@@ -4,7 +4,7 @@
 #define DESIGNAPI_DESIGN_BADGE_HPP_
 
 #include <api/api.hpp>
-#include <lvgl/ObjectAccess.hpp>
+#include <lvgl/Label.hpp>
 
 namespace design {
 
@@ -14,16 +14,13 @@ public:
   explicit Badge(lv_obj_t *object) { m_object = object; }
   explicit Badge(Object &object) { m_object = object.object(); }
 
-private:
+  Badge & add_static_label(const char * text){
+    return add(lvgl::Label().set_text_static(text).center());
+  }
 
-};
-
-class Pill : public lvgl::ObjectAccess<Pill> {
-public:
-  explicit Pill(const char *name = "");
-  explicit Pill(lv_obj_t *object) { m_object = object; }
-  explicit Pill(Object &object) { m_object = object.object(); }
-
+  Badge & add_label(const char * text){
+    return add(lvgl::Label().set_text(text).center());
+  }
 
 private:
 
