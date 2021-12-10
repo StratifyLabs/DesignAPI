@@ -1,7 +1,7 @@
 // Copyright 2016-2021 Tyler Gilbert and Stratify Labs, Inc; see LICENSE.md
 
-#ifndef DESIGNAPI_DESIGN_FORM_LIST_HPP_
-#define DESIGNAPI_DESIGN_FORM_LIST_HPP_
+#ifndef DESIGNAPI_DESIGN_EXTRAS_FORM_LIST_HPP_
+#define DESIGNAPI_DESIGN_EXTRAS_FORM_LIST_HPP_
 
 #include <api/api.hpp>
 
@@ -15,9 +15,11 @@ public:
   public:
     explicit Data(const char *name = "") : UserDataBase(name) {}
 
-    API_PUBLIC_BOOL(Data,allow_multiple, false);
 
     API_PMAZ(checked_symbol, Data, const char *, LV_SYMBOL_OK);
+
+    API_PUBLIC_BOOL(Data,allow_multiple, false);
+
     API_PMAZ(not_checked_symbol, Data, const char *, "");
 
   };
@@ -56,4 +58,4 @@ class Printer;
 Printer &operator<<(Printer &printer, const design::FormList &a);
 } // namespace printer
 
-#endif // DESIGNAPI_DESIGN_FORM_LIST_HPP_
+#endif // DESIGNAPI_DESIGN_EXTRAS_FORM_LIST_HPP_

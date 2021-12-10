@@ -15,8 +15,8 @@
 #include <fs/FileSystem.hpp>
 
 #include "design/Grid.hpp"
-#include "design/FormList.hpp"
-#include "design/FileSystemWindow.hpp"
+#include "design/extras/FormList.hpp"
+#include "design/extras/FileSystemWindow.hpp"
 
 #ifdef __win32
 #define ROOT_DRIVE "C:/"

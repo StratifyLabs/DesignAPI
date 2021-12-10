@@ -1,7 +1,7 @@
 // Copyright 2016-2021 Tyler Gilbert and Stratify Labs, Inc; see LICENSE.md
 
-#ifndef DESIGNAPI_DESIGN_CHECK_LIST_HPP_
-#define DESIGNAPI_DESIGN_CHECK_LIST_HPP_
+#ifndef DESIGNAPI_DESIGN_EXTRAS_CHECK_LIST_HPP_
+#define DESIGNAPI_DESIGN_EXTRAS_CHECK_LIST_HPP_
 
 #include <api/api.hpp>
 
@@ -13,12 +13,14 @@ class CheckList : public lvgl::ObjectAccess<CheckList> {
 public:
   class Data : public lvgl::UserDataAccess<Data> {
   public:
-    explicit Data(const char *name) : UserDataBase(name) {}
+    explicit Data(const char *name = "") : UserDataBase(name) {}
 
-  private:
-    API_AB(Data, allow_multiple, false);
-    API_AF(Data, const char *, checked_symbol, LV_SYMBOL_OK);
-    API_AF(Data, const char *, not_checked_symbol, "");
+    API_PMAZ(checked_symbol, Data, const char *, LV_SYMBOL_OK);
+
+    //these start with `is`
+    API_PUBLIC_BOOL(Data, allow_multiple, false);
+
+    API_PMAZ(not_checked_symbol, Data, const char * , "");
   };
 
   explicit CheckList(const Data &user_data);
@@ -26,23 +28,20 @@ public:
 
   static const lv_obj_class_t *get_class() { return api()->list_class; }
 
-  static constexpr auto check_symbol_name = "CheckSymbol";
-
   CheckList &add_item(const char *name, const char *text);
-
   CheckList &clear_all();
-
   CheckList &set_checked(const char *name, bool value = true);
-
   bool is_checked(const char *name) const;
+
+private:
+  struct Names {
+    static constexpr auto check_symbol_name = "CheckSymbol";
+  };
+
+  void update_border_side();
 };
 
 } // namespace design
 
-namespace printer {
-class Printer;
-// Add operators to send any important debug tracing data to a printer
-Printer &operator<<(Printer &printer, const design::CheckList &a);
-} // namespace printer
 
-#endif // DESIGNAPI_DESIGN_CHECK_LIST_HPP_
+#endif // DESIGNAPI_DESIGN_EXTRAS_CHECK_LIST_HPP_

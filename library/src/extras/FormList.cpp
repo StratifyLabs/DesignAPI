@@ -6,15 +6,14 @@
 #include <lvgl/Event.hpp>
 #include <lvgl/List.hpp>
 
-#include "design/FormList.hpp"
+#include "design/extras/FormList.hpp"
 
 
 using namespace design;
 using namespace lvgl;
 
 FormList::FormList(Data& data) {
-  m_object = api()->list_create(screen_object());
-  set_user_data(m_object,data.cast_as_name());
+  construct_list(data.cast_as_name());
 }
 
 FormList &FormList::add_item(const ItemData &item_data) {

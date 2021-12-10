@@ -4,9 +4,11 @@ set(SOURCES
 	Alert.cpp
 	Badge.cpp
 	Card.cpp
-	CheckList.cpp
-	FileSystemWindow.cpp
-	FormList.cpp
+
+	extras/CheckList.cpp
+	extras/FileSystemWindow.cpp
+	extras/FormList.cpp
+
 	Grid.cpp
 	Typography.cpp
 	PARENT_SCOPE

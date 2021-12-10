@@ -1,7 +1,7 @@
 // Copyright 2016-2021 Tyler Gilbert and Stratify Labs, Inc; see LICENSE.md
 
-#ifndef DESIGNAPI_DESIGN_FILESYSTEM_WINDOW_HPP_
-#define DESIGNAPI_DESIGN_FILESYSTEM_WINDOW_HPP_
+#ifndef DESIGNAPI_DESIGN_EXTRAS_FILESYSTEM_WINDOW_HPP_
+#define DESIGNAPI_DESIGN_EXTRAS_FILESYSTEM_WINDOW_HPP_
 
 #include <api/api.hpp>
 
@@ -95,4 +95,4 @@ class Printer;
 Printer &operator<<(Printer &printer, const design::FileSystemWindow &a);
 } // namespace printer
 
-#endif // DESIGNAPI_DESIGN_FILESYSTEM_WINDOW_HPP_
+#endif // DESIGNAPI_DESIGN_EXTRAS_FILESYSTEM_WINDOW_HPP_
