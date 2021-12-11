@@ -6,11 +6,10 @@
 
 #include "design/Badge.hpp"
 
-
 using namespace design;
 using namespace lvgl;
 
 Badge::Badge(const char *name) {
   construct_object(name);
-  add_style("badge");
+  add_style("badge").clear_flag(Flags::scrollable | Flags::clickable);
 }
