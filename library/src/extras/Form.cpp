@@ -75,7 +75,7 @@ Form::SelectFile::SelectFile(Data &data) {
            .set_text_static(""))
     .add(
       Button(Names::select_file_button)
-        .add_style("btn_md")
+        .add_style("btn_md btn_outline_primary")
         .add_static_label(LV_SYMBOL_DRIVE)
         .add_event_callback(
           EventCode::clicked,
@@ -85,9 +85,9 @@ Form::SelectFile::SelectFile(Data &data) {
             auto *file_system_data
               = select_file.user_data<FileSystemWindow::Data>();
 
-            printf("text is %s\n", select_file.get_path());
             const auto parent
               = fs::Path::parent_directory(select_file.get_path());
+
             if (
               !parent.is_empty() && fs::FileSystem().directory_exists(parent)) {
               file_system_data->path = parent;
@@ -125,7 +125,10 @@ Form::SelectFile::SelectFile(Data &data) {
                         .set_text(fs_data->path / fs_data->selected_file);
                     }
 
-                    self.get_parent().async_remove();
+                    self.get<Generic>().clear_state(State::user1);
+                    self.get_parent().get<Generic>().clear_state(State::user1);
+
+                    self.get_parent().remove_later(300_milliseconds);
 
                     Event::send(
                       SelectFile(
