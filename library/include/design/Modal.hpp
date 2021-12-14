@@ -11,7 +11,7 @@ namespace design {
 
 class Modal : public lvgl::ObjectAccess<Modal> {
 public:
-  Modal();
+  LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Modal);
 
 private:
 
@@ -19,10 +19,5 @@ private:
 
 }
 
-namespace printer {
-class Printer;
-//Add operators to send any important debug tracing data to a printer
-Printer &operator<<(Printer &printer, const design::Modal &a);
-} // namespace printer
 
 #endif // DESIGNAPI_DESIGN_MODAL_HPP_

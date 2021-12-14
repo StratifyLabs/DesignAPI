@@ -5,6 +5,8 @@ set(SOURCES
 	design/Badge.hpp
 	design/Card.hpp
 	design/Typography.hpp
+	design/HorizontalLine.hpp
+	design/Modal.hpp
 
 	design/extras/FileSystemWindow.hpp
 	design/extras/CheckList.hpp
