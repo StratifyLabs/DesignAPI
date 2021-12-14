@@ -2,11 +2,9 @@
 // Created by Tyler Gilbert on 12/2/21.
 //
 
-#include <lvgl/Checkbox.hpp>
 #include <lvgl/Draw.hpp>
 #include <lvgl/Event.hpp>
 #include <lvgl/Image.hpp>
-#include <lvgl/Line.hpp>
 #include <lvgl/List.hpp>
 #include <lvgl/Table.hpp>
 #include <lvgl/TileView.hpp>
@@ -16,7 +14,6 @@
 
 #include "design/Grid.hpp"
 #include "design/extras/FileSystemWindow.hpp"
-#include "design/extras/FormList.hpp"
 
 #ifdef __win32
 #define ROOT_DRIVE "C:/"
@@ -33,7 +30,7 @@ FileSystemWindow::FileSystemWindow(Data &data) {
   construct_object(data.cast_as_name());
   add_style("card");
 
-  if( data.base_path.is_empty() ){
+  if (data.base_path.is_empty()) {
     data.base_path = root_drive_path();
   }
 
@@ -48,24 +45,29 @@ FileSystemWindow::FileSystemWindow(Data &data) {
 
   {
     auto header_row = find<Row>(Names::header_row);
-    header_row
-      .add(Label(Names::path_label)
+    header_row.add(Label(Names::path_label)
                      .add_style("form_label")
                      .set_flex_grow()
                      .set_text_as_static(data.path));
 
-    if( data.is_select_file ){
-      header_row.add(Button(Names::select_button)
-                       .add_label_as_static(LV_SYMBOL_OK)
-                       .add_event_callback(EventCode::clicked, select_button_pressed));
+    header_row.add(
+      Button(Names::back_button)
+        .add_style("btn_outline_primary")
+        .add_label_as_static(data.back_symbol)
+        .add_event_callback(EventCode::clicked, back_button_pressed));
+
+    if (data.is_select_file) {
+      header_row.add(
+        Button(Names::select_button)
+          .add_label_as_static(LV_SYMBOL_OK)
+          .add_event_callback(EventCode::clicked, select_button_pressed));
     }
 
-    header_row.add(Button(Names::back_button)
-             .add_label_as_static(data.path == data.base_path ? data.close_symbol : data.back_symbol)
-             .add_event_callback(EventCode::clicked, back_button_pressed));
-
-
-
+    header_row.add(
+      Button(Names::cancel_button)
+        .add_style("btn_danger")
+        .add_label_as_static(data.close_symbol)
+        .add_event_callback(EventCode::clicked, cancel_button_pressed));
   }
 
   {
@@ -77,8 +79,15 @@ FileSystemWindow::FileSystemWindow(Data &data) {
 
 void FileSystemWindow::select_button_pressed(lv_event_t *e) {
   auto window = get_window(Event(e).target());
-  auto * fs_data = window.user_data<Data>();
+  auto *fs_data = window.user_data<Data>();
   fs_data->notify_status = NotifyStatus::selected;
+  Event::send(window, EventCode::notified);
+}
+
+void FileSystemWindow::cancel_button_pressed(lv_event_t *e) {
+  auto window = get_window(Event(e).target());
+  auto *fs_data = window.user_data<Data>();
+  fs_data->notify_status = NotifyStatus::cancelled;
   Event::send(window, EventCode::notified);
 }
 
@@ -86,10 +95,10 @@ void FileSystemWindow::back_button_pressed(lv_event_t *e) {
   const auto event = Event(e);
 
   auto window = get_window(event.target());
-  auto * fs_data = window.user_data<Data>();
+  auto *fs_data = window.user_data<Data>();
   auto &path = fs_data->path;
 
-  if( path == fs_data->base_path ){
+  if (path == fs_data->base_path) {
     fs_data->notify_status = NotifyStatus::closed;
     Event::send(get_window(Event(e).target()), EventCode::notified);
     return;
@@ -102,21 +111,15 @@ void FileSystemWindow::back_button_pressed(lv_event_t *e) {
       const auto info = fs::FileSystem().get_info(parent);
       window.update_path(parent);
       if (info.is_directory()) {
-        configure_list(window.get_content_area());
+        configure_list(window.get_content());
       } else {
-        configure_details(window.get_content_area());
+        configure_details(window.get_content());
       }
     } else {
       window.update_path(root_drive_path());
-      window.set_back_button_label(fs_data->close_symbol);
-      configure_list(window.get_content_area());
+      configure_list(window.get_content());
     }
   }
-}
-
-FileSystemWindow &FileSystemWindow::set_back_button_label(const char *label) {
-  find<Button>(Names::back_button).get_child(0).get<Image>().set_source(label);
-  return *this;
 }
 
 FileSystemWindow &FileSystemWindow::update_path(var::StringView path) {
@@ -124,10 +127,6 @@ FileSystemWindow &FileSystemWindow::update_path(var::StringView path) {
   user_data_path = path;
   find<Label>(Names::path_label).set_text_as_static(user_data_path);
   return *this;
-}
-
-Label FileSystemWindow::get_title_label(const Window &window) {
-  return window.find<Label>(Names::window_title);
 }
 
 FileSystemWindow FileSystemWindow::get_window(lvgl::Object child) {
@@ -142,7 +141,7 @@ void FileSystemWindow::configure_details(Generic container) {
     .clean()
     .add(Table(Names::file_details_table).setup([](Table table) {
       auto *fs_data = get_window(table).user_data<Data>();
-      const auto width = lvgl::screen().get_width();
+      const auto half_width = lv_coord_t(lvgl::screen().get_width() / 2);
       const auto info = fs::FileSystem().get_info(fs_data->path);
       const auto file_type = info.is_file() ? "File" : "Device";
 
@@ -150,8 +149,8 @@ void FileSystemWindow::configure_details(Generic container) {
         .set_height(100_percent)
         .set_column_count(2)
         .set_row_count(4)
-        .set_column_width(0, width / 2)
-        .set_column_width(1, width / 2)
+        .set_column_width(0, half_width)
+        .set_column_width(1, half_width)
         .set_cell_value(Table::Cell().set_column(0).set_row(0), "Type")
         .set_cell_value(Table::Cell().set_column(0).set_row(1), "Size")
         .set_cell_value(Table::Cell().set_column(0).set_row(2), "Mode")
@@ -208,7 +207,7 @@ void FileSystemWindow::configure_list(Generic container) {
     const auto &path = file_system_data->path;
     auto is_exclude = [](const var::StringView name, void *data) {
       auto *file_system_data = reinterpret_cast<Data *>(data);
-      if (file_system_data->is_show_hidden == false) {
+      if (!file_system_data->is_show_hidden) {
         if (name.length() && name.at(0) == '.') {
           return fs::FileSystem::IsExclude::yes;
         }
@@ -217,7 +216,7 @@ void FileSystemWindow::configure_list(Generic container) {
       if (file_system_data->is_select_folder) {
         const auto info
           = fs::FileSystem().get_info(file_system_data->path / name);
-        if (info.is_directory() == false) {
+        if (!info.is_directory()) {
           return fs::FileSystem::IsExclude::yes;
         }
       }
@@ -261,7 +260,7 @@ void FileSystemWindow::configure_list(Generic container) {
 
           const auto is_checked = button.has_state(State::checked);
           if (!is_checked) {
-            for(auto child: list){
+            for (auto child : list) {
               child.get<Generic>().clear_state(State::checked);
             }
             fs_data->selected_file = entry_name;
@@ -271,16 +270,13 @@ void FileSystemWindow::configure_list(Generic container) {
 
           if (entry_name != Names::entry_list) {
 
-            printf("get info on selected\n");
             const auto next_path = get_next_path(fs_data->path, entry_name);
             const auto info = fs::FileSystem().get_info(next_path);
-
-            window.set_back_button_label(fs_data->back_symbol);
 
             // clicked a directory or a file?
             if (info.is_directory()) {
               // configure this list with the content area
-              configure_list(window.update_path(next_path).get_content_area());
+              configure_list(window.update_path(next_path).get_content());
             } else {
 
               if (fs_data->is_select_file) {
@@ -288,7 +284,7 @@ void FileSystemWindow::configure_list(Generic container) {
                 Event::send(window, EventCode::notified);
               } else {
                 window.update_path(next_path);
-                configure_details(window.get_content_area());
+                configure_details(window.get_content());
               }
             }
           }

@@ -2,7 +2,7 @@
 // Created by Tyler Gilbert on 12/2/21.
 //
 
-#include <lvgl/Checkbox.hpp>
+#include <lvgl/CheckBox.hpp>
 #include <lvgl/Event.hpp>
 #include <lvgl/List.hpp>
 

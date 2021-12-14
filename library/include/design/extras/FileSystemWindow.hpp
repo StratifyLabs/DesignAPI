@@ -20,7 +20,7 @@ public:
     explicit Data(const char *name = "") : UserDataBase(name) {}
 
     API_PMAZ(animation_time, Data, chrono::MicroTime, chrono::MicroTime{});
-    API_PMAZ(back_symbol, Data, const char *, LV_SYMBOL_LEFT);
+    API_PMAZ(back_symbol, Data, const char *, LV_SYMBOL_UP);
     API_PMAZ(base_path, Data, var::PathString, {});
     API_PMAZ(close_symbol, Data, const char *, LV_SYMBOL_CLOSE);
     API_PMAZ(directory_symbol, Data, const char *, LV_SYMBOL_DIRECTORY);
@@ -49,24 +49,18 @@ private:
     static constexpr auto content_area = "ContentArea";
     static constexpr auto path_label = "PathLabel";
 
-    static constexpr auto ok_button = "OkButton";
     static constexpr auto back_button = "BackButton";
+    static constexpr auto cancel_button = "CancelButton";
     static constexpr auto entry_list = "EntryList";
-    static constexpr auto tile_view = "TileView";
-    static constexpr auto file_browser_window = "FileBrowser";
-    static constexpr auto window_title = "WindowTitle";
     static constexpr auto file_details_table = "FileDetails";
     static constexpr auto home_button = "HomeButton";
     static constexpr auto root_drive_button = "RootDriveButton";
     static constexpr auto select_button = "SelectButton";
-    static constexpr auto cancel_button = "CancelButton";
-    static constexpr auto show_hidden_checkbox = "ShowHidden";
   };
 
 
-  FileSystemWindow& set_back_button_label(const char * label);
   FileSystemWindow& update_path(var::StringView path);
-  lvgl::Generic get_content_area() const {
+  lvgl::Generic get_content() const {
     return find<lvgl::Generic>(Names::content_area);
   }
 
@@ -74,11 +68,10 @@ private:
   static void configure_list(lvgl::Generic container);
   static void back_button_pressed(lv_event_t*e);
   static void select_button_pressed(lv_event_t*e);
+  static void cancel_button_pressed(lv_event_t*e);
 
   static var::PathString
   get_next_path(const var::PathString &path, const char *entry);
-
-  static lvgl::Label get_title_label(const lvgl::Window &window);
 
   static FileSystemWindow get_window(lvgl::Object child);
 
