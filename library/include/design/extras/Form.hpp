@@ -114,17 +114,22 @@ public:
       return *this;
     }
 
+    SelectFile &set_label(const char *value) {
+      get_label().set_text(value);
+      return *this;
+    }
+
     const char *get_value() const {
       return find<lvgl::TextArea>(Names::selected_path_label).get_text();
     }
 
     SelectFile &set_value(const char *value) {
-      find<lvgl::Label>(Names::select_file_label).set_text(value);
+      find<lvgl::TextArea>(Names::selected_path_label).set_text(value);
       return *this;
     }
 
     SelectFile &set_value_as_static(const char *value) {
-      find<lvgl::Label>(Names::select_file_label).set_text_as_static(value);
+      find<lvgl::TextArea>(Names::selected_path_label).set_text_as_static(value);
       return *this;
     }
 

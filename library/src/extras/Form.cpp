@@ -89,12 +89,13 @@ Form::Form(const char *name, const Schema schema) {
     if (type == SelectFile::Schema::schema_type) {
       SelectFile::Schema input_schema(input);
       const auto name = input_schema.get_name_cstring();
+      printf("select file name is %s\n", name);
       add(SelectFile(
             SelectFile::Data::create(name).set_select_file(true).set_base_path(
               input_schema.get_base_path_cstring()))
-            .set_label_as_static(input_schema.get_name_cstring())
             .set_hint_as_static(input_schema.get_hint_cstring())
-            .set_value_as_static(input_schema.get_value_cstring()));
+            .set_value_as_static(input_schema.get_value_cstring())
+            .set_label_as_static(input_schema.get_name_cstring()));
       continue;
     }
 
