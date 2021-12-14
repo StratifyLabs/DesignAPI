@@ -45,7 +45,7 @@ CheckList &CheckList::add_item(const char *name, const char *text) {
     .add(lvgl::Label(Names::check_symbol_name)
            .set_width(size_from_content)
            .set_alignment(lvgl::Alignment::right_middle)
-           .set_text_static(""));
+           .set_text_as_static(""));
 
 
 
@@ -57,7 +57,7 @@ CheckList &CheckList::clear_all() {
     auto label = get_child(i).find<lvgl::Label, lvgl::IsAssertOnFail::no>(
       Names::check_symbol_name);
     if (label.object()) {
-      label.set_text_static("");
+      label.set_text_as_static("");
     }
   }
   return *this;
@@ -76,8 +76,7 @@ CheckList &CheckList::set_checked(const char *name, bool value) {
     Names::check_symbol_name);
   if (label.is_valid()) {
     auto *c = user_data<Data>();
-    label.set_text_static(
-      value ? c->checked_symbol : c->not_checked_symbol);
+    label.set_text_as_static(value ? c->checked_symbol : c->not_checked_symbol);
   }
   return *this;
 }

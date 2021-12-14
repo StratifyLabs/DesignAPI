@@ -33,12 +33,13 @@ public:
   Heading4(const char * title);
 };
 
+class Paragraph : public lvgl::ObjectAccess<Paragraph> {
+public:
+  LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Paragraph);
+
+};
+
 }
 
-namespace printer {
-class Printer;
-//Add operators to send any important debug tracing data to a printer
-Printer &operator<<(Printer &printer, const design::Heading1 &a);
-} // namespace printer
 
 #endif // DESIGNAPI_DESIGN_TYPOGRAPHY_HPP_

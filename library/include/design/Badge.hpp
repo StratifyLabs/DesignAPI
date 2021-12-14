@@ -14,8 +14,8 @@ public:
   explicit Badge(lv_obj_t *object) { m_object = object; }
   explicit Badge(Object &object) { m_object = object.object(); }
 
-  Badge & add_static_label(const char * text){
-    return add(lvgl::Label().set_text_static(text).center());
+  Badge & add_label_as_static(const char * text){
+    return add(lvgl::Label().set_text_as_static(text).center());
   }
 
   Badge & add_label(const char * text){

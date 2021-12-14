@@ -31,16 +31,16 @@ FormList &FormList::add_item(const ItemData &item_data) {
         auto label = button.find<Label>(value_name);
         if (c->type == ItemType::boolean) {
           if (var::StringView(label.get_text()).is_empty()) {
-            label.set_text_static(LV_SYMBOL_OK);
+            label.set_text_as_static(LV_SYMBOL_OK);
           } else {
-            label.set_text_static("");
+            label.set_text_as_static("");
           }
         } else {
           if (c->clicked_callback) {
             c->clicked_callback(e);
           }
           if (c->type != ItemType::navigation) {
-            label.set_text_static(c->value);
+            label.set_text_as_static(c->value);
           }
         }
       })
@@ -50,7 +50,7 @@ FormList &FormList::add_item(const ItemData &item_data) {
 
   auto *c = button.user_data<ItemData>();
   button.find<Label>(value_name)
-    .set_text_static(
+    .set_text_as_static(
       (c->type == ItemType::navigation) ? LV_SYMBOL_RIGHT : c->value.cstring());
   return *this;
 }
@@ -59,7 +59,6 @@ FormList& FormList::update_item_value(const char * item_name, const char * item_
   auto button = find<Button>(item_name);
   auto *c = button.user_data<ItemData>();
   c->value = item_value;
-  button.find<Label>(value_name)
-    .set_text_static(c->value.cstring());
+  button.find<Label>(value_name).set_text_as_static(c->value.cstring());
   return *this;
 }

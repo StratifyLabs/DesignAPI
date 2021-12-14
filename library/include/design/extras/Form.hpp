@@ -21,7 +21,7 @@ public:
     LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(LineField);
 
     LineField &set_label_as_static(const char *value) {
-      get_label().set_text_static(value);
+      get_label().set_text_as_static(value);
       return *this;
     }
 
@@ -36,7 +36,7 @@ public:
     }
 
     LineField &set_value_as_static(const char *value) {
-      get_text_area().set_text_static(value);
+      get_text_area().set_text_as_static(value);
       return *this;
     }
 

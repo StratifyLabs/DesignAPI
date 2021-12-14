@@ -37,7 +37,7 @@ Card & Card::add_style(var::StringView value){
 
 Card::Header::Header(const char *title) {
   m_object = api()->label_create(screen_object());
-  Label(m_object).set_text_static(title);
+  Label(m_object).set_text_as_static(title);
   set_user_data(m_object, Names::header);
 
   add_style("card_header");
@@ -45,7 +45,7 @@ Card::Header::Header(const char *title) {
 
 Card::Footer::Footer(const char * title){
   m_object = api()->label_create(screen_object());
-  Label(m_object).set_text_static(title);
+  Label(m_object).set_text_as_static(title);
   set_user_data(m_object, Names::footer);
 
   fill_width()

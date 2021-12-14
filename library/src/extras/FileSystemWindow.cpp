@@ -50,18 +50,18 @@ FileSystemWindow::FileSystemWindow(Data &data) {
     auto header_row = find<Row>(Names::header_row);
     header_row
       .add(Label(Names::path_label)
-             .add_style("form_label")
-             .set_flex_grow()
-             .set_text_static(data.path));
+                     .add_style("form_label")
+                     .set_flex_grow()
+                     .set_text_as_static(data.path));
 
     if( data.is_select_file ){
       header_row.add(Button(Names::select_button)
-                       .add_static_label(LV_SYMBOL_OK)
+                       .add_label_as_static(LV_SYMBOL_OK)
                        .add_event_callback(EventCode::clicked, select_button_pressed));
     }
 
     header_row.add(Button(Names::back_button)
-             .add_static_label(data.path == data.base_path ? data.close_symbol : data.back_symbol)
+             .add_label_as_static(data.path == data.base_path ? data.close_symbol : data.back_symbol)
              .add_event_callback(EventCode::clicked, back_button_pressed));
 
 
@@ -122,7 +122,7 @@ FileSystemWindow &FileSystemWindow::set_back_button_label(const char *label) {
 FileSystemWindow &FileSystemWindow::update_path(var::StringView path) {
   auto &user_data_path = user_data<Data>()->path;
   user_data_path = path;
-  find<Label>(Names::path_label).set_text_static(user_data_path);
+  find<Label>(Names::path_label).set_text_as_static(user_data_path);
   return *this;
 }
 

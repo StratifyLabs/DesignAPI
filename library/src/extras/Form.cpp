@@ -42,7 +42,7 @@ Form::LineField::LineField(const char *name) {
            .set_one_line_mode()
            .add_to_default_group())
     .add(Button()
-           .add_static_label(LV_SYMBOL_CLOSE)
+           .add_label_as_static(LV_SYMBOL_CLOSE)
            .add_style("btn_md btn_outline_light")
            .add_event_callback(
              EventCode::clicked,
@@ -51,7 +51,7 @@ Form::LineField::LineField(const char *name) {
                  .target()
                  .get_parent()
                  .find<TextArea>(Names::field)
-                 .set_text_static("");
+                 .set_text_as_static("");
              }))
     .add(NakedContainer().set_width(2_percent).set_height(0));
 }
@@ -68,15 +68,15 @@ Form::SelectFile::SelectFile(Data &data) {
            .add_style("form_label")
            .set_width(20_percent)
            .set_text_alignment(TextAlignment::right)
-           .set_text_static("Select File"))
+           .set_text_as_static("Select File"))
     .add(TextArea(Names::selected_path_label)
            .add_style("form_field")
            .set_flex_grow()
-           .set_text_static(""))
+           .set_text_as_static(""))
     .add(
       Button(Names::select_file_button)
         .add_style("btn_md btn_outline_primary")
-        .add_static_label(LV_SYMBOL_DRIVE)
+        .add_label_as_static(LV_SYMBOL_DRIVE)
         .add_event_callback(
           EventCode::clicked,
           [](lv_event_t *e) {
