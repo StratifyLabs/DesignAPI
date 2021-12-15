@@ -11,8 +11,8 @@
 
 #include <json/Json.hpp>
 
-#include "FileSystemWindow.hpp"
 #include "../Typography.hpp"
+#include "FileSystemWindow.hpp"
 
 namespace design {
 
@@ -29,8 +29,11 @@ public:
   class SectionHeadingSchema : public json::JsonValue {
   public:
     static constexpr auto schema_type = "sectionHeading";
-    SectionHeadingSchema() : json::JsonValue(json::JsonObject()) { set_type(schema_type); }
-    SectionHeadingSchema(const json::JsonObject object) : json::JsonValue(object) {}
+    SectionHeadingSchema() : json::JsonValue(json::JsonObject()) {
+      set_type(schema_type);
+    }
+    SectionHeadingSchema(const json::JsonObject object)
+      : json::JsonValue(object) {}
 
     JSON_ACCESS_STRING(SectionHeadingSchema, name);
     JSON_ACCESS_STRING(SectionHeadingSchema, type);
@@ -67,7 +70,7 @@ public:
       return find<lvgl::TextArea>(Names::field);
     }
 
-    const char *get_value() const { return get_text_area().get_text(); }
+    var::StringView get_value() const { return get_text_area().get_text(); }
 
     LineField &set_hint_as_static(const char *value) {
       Form::set_hint_as_static(find<lvgl::Label>(Names::hint_label), value);
@@ -93,10 +96,11 @@ public:
     };
 
   private:
+    friend Form;
     struct Names {
-      static constexpr auto label = "Label";
-      static constexpr auto field = "Field";
-      static constexpr auto hint_label = "HintLabel";
+      static constexpr auto label = "label";
+      static constexpr auto field = "field";
+      static constexpr auto hint_label = "LineFieldHint";
     };
   };
 
@@ -107,7 +111,9 @@ public:
     explicit SelectFile(Data &data);
     explicit SelectFile(lv_obj_t *object) { m_object = object; }
 
-    lvgl::Label get_label() const { return find<lvgl::Label>(Names::select_file_label); }
+    lvgl::Label get_label() const {
+      return find<lvgl::Label>(Names::select_file_label);
+    }
 
     SelectFile &set_label_as_static(const char *value) {
       get_label().set_text_as_static(value);
@@ -119,7 +125,7 @@ public:
       return *this;
     }
 
-    const char *get_value() const {
+    var::StringView get_value() const {
       return find<lvgl::TextArea>(Names::selected_path_label).get_text();
     }
 
@@ -129,7 +135,8 @@ public:
     }
 
     SelectFile &set_value_as_static(const char *value) {
-      find<lvgl::TextArea>(Names::selected_path_label).set_text_as_static(value);
+      find<lvgl::TextArea>(Names::selected_path_label)
+        .set_text_as_static(value);
       return *this;
     }
 
@@ -158,9 +165,10 @@ public:
     };
 
   private:
+    friend Form;
     struct Names {
       static constexpr auto select_file_label = "Label";
-      static constexpr auto hint_label = "HintLabel";
+      static constexpr auto hint_label = "SelectFileHint";
       static constexpr auto select_file_button = "Button";
       static constexpr auto select_file_modal = "Modal";
       static constexpr auto selected_path_label = "FilePath";
@@ -179,7 +187,7 @@ public:
       return *this;
     }
 
-    const char *get_value() const { return get_dropdown().get_text(); }
+    var::StringView get_value() const;
 
     lvgl::Label get_label() const { return find<lvgl::Label>(Names::label); }
 
@@ -218,10 +226,11 @@ public:
     };
 
   private:
+    friend Form;
     struct Names {
       static constexpr auto label = "Label";
       static constexpr auto dropdown = "Select";
-      static constexpr auto hint_label = "HintLabel";
+      static constexpr auto hint_label = "SelectHint";
     };
   };
 
@@ -247,6 +256,21 @@ public:
   };
 
   Form(const char *name, Schema schema);
+
+  var::StringView get_value(lvgl::Object child) const;
+
+  static constexpr auto not_a_value = "$$$notAFormValue";
+
+private:
+  template <class InputClass> InputClass check_type(lvgl::Object object) const {
+    if (object
+          .find<InputClass, lvgl::IsAssertOnFail::no>(
+            InputClass::Names::hint_label)
+          .is_valid()) {
+      return object.get<InputClass>();
+    }
+    return InputClass((lv_obj_t *)nullptr);
+  }
 };
 
 } // namespace design

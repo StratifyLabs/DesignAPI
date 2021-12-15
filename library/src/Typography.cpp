@@ -62,3 +62,9 @@ Paragraph::Paragraph(const char *name) {
   api()->label_set_text_static(m_object, "");
   add_style("paragraph");
 }
+
+Paragraph::Paragraph(const char *name, const char * content) {
+  construct_label(name);
+  add_style("paragraph");
+  api()->label_set_text_static(m_object, content);
+}

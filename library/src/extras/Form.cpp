@@ -33,6 +33,33 @@ Form::Form(const char *name) {
     .add_style("form");
 }
 
+var::StringView Form::get_value(lvgl::Object child) const {
+
+  {
+    auto input = check_type<LineField>(child);
+    if( input.is_valid() ){
+      return input.get_value();
+    }
+  }
+
+  {
+    auto input = check_type<SelectFile>(child);
+    if( input.is_valid() ){
+      return input.get_value();
+    }
+  }
+
+  {
+    auto input = check_type<Select>(child);
+    if( input.is_valid() ){
+      return input.get_value();
+    }
+  }
+
+  //section headings, decoration, etc
+  return not_a_value;
+}
+
 Form::Schema::Schema(var::StringView file_path, IsOverwrite is_overwrite)
   : m_path(file_path), m_is_overwrite(is_overwrite) {
   API_RETURN_IF_ERROR();
@@ -78,24 +105,35 @@ Form::Form(const char *name, const Schema schema) {
       const auto name = input_schema.get_name_cstring();
       add(Select(name)
             .set_label_as_static(input_schema.get_label_cstring())
-            .set_hint_as_static(input_schema.get_hint_cstring())
-            .set_value(input_schema.get_value_cstring()));
+            .set_hint_as_static(input_schema.get_hint_cstring()));
+
       auto select = find<Select>(name);
       select.get_dropdown().set_options_as_static(
         input_schema.get_options_cstring());
+
+      const auto option_list = input_schema.get_options().split("\n");
+      const auto current_value = input_schema.get_value();
+      size_t selected = 0;
+      for(const auto & option: option_list){
+        if( option == current_value ){
+          select.get_dropdown().set_selected(selected);
+          break;
+        }
+        ++selected;
+      }
+
       continue;
     }
 
     if (type == SelectFile::Schema::schema_type) {
       SelectFile::Schema input_schema(input);
       const auto name = input_schema.get_name_cstring();
-      printf("select file name is %s\n", name);
       add(SelectFile(
             SelectFile::Data::create(name).set_select_file(true).set_base_path(
               input_schema.get_base_path_cstring()))
             .set_hint_as_static(input_schema.get_hint_cstring())
             .set_value_as_static(input_schema.get_value_cstring())
-            .set_label_as_static(input_schema.get_name_cstring()));
+            .set_label_as_static(input_schema.get_label_cstring()));
       continue;
     }
 
@@ -268,4 +306,15 @@ Form::Select::Select(const char *name) {
            .add_flag(Flags::hidden)
            .set_text_alignment(TextAlignment::left)
            .set_text_as_static(""));
+}
+
+var::StringView Form::Select::get_value() const {
+  const auto dropdown = get_dropdown();
+  const auto option_list = var::StringView(dropdown.get_options()).split("\n");
+  const auto selected = dropdown.get_selected();
+  if( selected < option_list.count() ){
+    return option_list.at(selected);
+  }
+
+  return var::StringView();
 }

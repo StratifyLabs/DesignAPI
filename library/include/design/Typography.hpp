@@ -36,6 +36,7 @@ public:
 class Paragraph : public lvgl::ObjectAccess<Paragraph> {
 public:
   LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Paragraph);
+  Paragraph(const char * name, const char * content);
 
 };
 
