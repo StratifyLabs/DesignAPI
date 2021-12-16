@@ -7,6 +7,7 @@ set(SOURCES
 	design/Typography.hpp
 	design/HorizontalLine.hpp
 	design/Modal.hpp
+	design/Worker.hpp
 
 	design/extras/FileSystemWindow.hpp
 	design/extras/CheckList.hpp

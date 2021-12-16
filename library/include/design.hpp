@@ -10,6 +10,7 @@ namespace design {}
 #include "design/Grid.hpp"
 #include "design/HorizontalLine.hpp"
 #include "design/Typography.hpp"
+#include "design/Worker.hpp"
 
 using namespace design;
 

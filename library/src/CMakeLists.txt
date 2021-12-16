@@ -6,6 +6,7 @@ set(SOURCES
 	Card.cpp
 	HorizontalLine.cpp
 	Modal.cpp
+	Worker.cpp
 
 	extras/CheckList.cpp
 	extras/FileSystemWindow.cpp
