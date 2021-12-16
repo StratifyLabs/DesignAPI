@@ -5,6 +5,8 @@
 #ifndef DESIGN_API_DESIGN_EXTRAS_CARDS_HPP
 #define DESIGN_API_DESIGN_EXTRAS_CARDS_HPP
 
+#include <lvgl/Generic.hpp>
+
 namespace design {
 
 //
@@ -20,9 +22,16 @@ public:
    *
    *
    */
-  class A {
+  class A : public lvgl::ObjectAccess<A> {
   public:
-    A();
+    struct Construct {
+
+      API_PMAZ(name,Construct,const char*,"");
+      API_PMAZ(background_style,Construct,const char*,"bg_primary");
+      API_PMAZ(icon,Construct,const char*,"");
+
+    };
+    A(const Construct & options);
   };
 
 

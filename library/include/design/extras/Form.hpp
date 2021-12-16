@@ -161,6 +161,7 @@ public:
       JSON_ACCESS_STRING(Schema, label);
       JSON_ACCESS_STRING(Schema, hint);
       JSON_ACCESS_STRING(Schema, value);
+      JSON_ACCESS_STRING(Schema, suffix);
       JSON_ACCESS_STRING_WITH_KEY(Schema, basePath, base_path);
     };
 

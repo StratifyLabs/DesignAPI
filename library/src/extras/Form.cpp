@@ -37,26 +37,26 @@ var::StringView Form::get_value(lvgl::Object child) const {
 
   {
     auto input = check_type<LineField>(child);
-    if( input.is_valid() ){
+    if (input.is_valid()) {
       return input.get_value();
     }
   }
 
   {
     auto input = check_type<SelectFile>(child);
-    if( input.is_valid() ){
+    if (input.is_valid()) {
       return input.get_value();
     }
   }
 
   {
     auto input = check_type<Select>(child);
-    if( input.is_valid() ){
+    if (input.is_valid()) {
       return input.get_value();
     }
   }
 
-  //section headings, decoration, etc
+  // section headings, decoration, etc
   return not_a_value;
 }
 
@@ -114,8 +114,8 @@ Form::Form(const char *name, const Schema schema) {
       const auto option_list = input_schema.get_options().split("\n");
       const auto current_value = input_schema.get_value();
       size_t selected = 0;
-      for(const auto & option: option_list){
-        if( option == current_value ){
+      for (const auto &option : option_list) {
+        if (option == current_value) {
           select.get_dropdown().set_selected(selected);
           break;
         }
@@ -128,9 +128,10 @@ Form::Form(const char *name, const Schema schema) {
     if (type == SelectFile::Schema::schema_type) {
       SelectFile::Schema input_schema(input);
       const auto name = input_schema.get_name_cstring();
-      add(SelectFile(
-            SelectFile::Data::create(name).set_select_file(true).set_base_path(
-              input_schema.get_base_path_cstring()))
+      add(SelectFile(SelectFile::Data::create(name)
+                       .set_select_file(true)
+                       .set_suffix_filter(input_schema.get_suffix_cstring())
+                       .set_base_path(input_schema.get_base_path_cstring()))
             .set_hint_as_static(input_schema.get_hint_cstring())
             .set_value_as_static(input_schema.get_value_cstring())
             .set_label_as_static(input_schema.get_label_cstring()));
@@ -236,12 +237,6 @@ void Form::SelectFile::handle_clicked(lv_event_t *e) {
   auto select_file = event.target().get_parent().get_parent().get<SelectFile>();
   auto *file_system_data = select_file.user_data<FileSystemWindow::Data>();
 
-  const auto parent = fs::Path::parent_directory(select_file.get_value());
-
-  if (!parent.is_empty() && fs::FileSystem().directory_exists(parent)) {
-    file_system_data->path = parent;
-  }
-
   auto *new_data = file_system_data->needs_free()
                      ? &FileSystemWindow::Data::create()
                      : file_system_data;
@@ -271,7 +266,9 @@ void Form::SelectFile::handle_notified(lv_event_t *e) {
 
   if (fs_data->notify_status == FileSystemWindow::NotifyStatus::selected) {
     select_file.find<TextArea>(Names::selected_path_label)
-      .set_text(fs_data->path / fs_data->selected_file);
+      .set_text(
+        fs_data->is_absolute_path ? fs_data->full_path
+                                  : fs_data->relative_path);
   }
 
   self.get<Generic>().clear_state(State::user1);
@@ -312,7 +309,7 @@ var::StringView Form::Select::get_value() const {
   const auto dropdown = get_dropdown();
   const auto option_list = var::StringView(dropdown.get_options()).split("\n");
   const auto selected = dropdown.get_selected();
-  if( selected < option_list.count() ){
+  if (selected < option_list.count()) {
     return option_list.at(selected);
   }
 

@@ -4,6 +4,7 @@
 #define DESIGNAPI_DESIGN_EXTRAS_FILESYSTEM_WINDOW_HPP_
 
 #include <api/api.hpp>
+#include <fs/FileSystem.hpp>
 
 #include <lvgl/Window.hpp>
 
@@ -25,16 +26,27 @@ public:
     API_PMAZ(close_symbol, Data, const char *, LV_SYMBOL_CLOSE);
     API_PMAZ(directory_symbol, Data, const char *, LV_SYMBOL_DIRECTORY);
     API_PMAZ(file_symbol, Data, const char *, LV_SYMBOL_FILE);
+    API_PMAZ(full_path, Data, var::PathString, {});
 
     // members start with `is_`
+    API_PUBLIC_BOOL(Data, absolute_path, false);
     API_PUBLIC_BOOL(Data, select_file, false);
     API_PUBLIC_BOOL(Data, select_folder, false);
     API_PUBLIC_BOOL(Data, show_hidden, false);
 
     API_PMAZ(notify_status, Data, NotifyStatus, NotifyStatus::null);
-    API_PMAZ(path, Data, var::PathString, {});
+    API_PMAZ(relative_path, Data, var::PathString, {});
     API_PMAZ(selected_file, Data, var::NameString, {});
+    API_PMAZ(suffix_filter, Data, const char *, "");
     API_PMAZ(user_data, Data, void*, nullptr);
+
+  private:
+    friend FileSystemWindow;
+    void enter_directory(var::StringView name);
+    var::PathString get_path_with_entry(var::StringView entry) const;
+    void exit_directory();
+    void update_full_path();
+    bool is_base_path() const;
   };
 
   explicit FileSystemWindow(Data &data);
@@ -70,12 +82,10 @@ private:
   static void select_button_pressed(lv_event_t*e);
   static void cancel_button_pressed(lv_event_t*e);
 
-  static var::PathString
-  get_next_path(const var::PathString &path, const char *entry);
-
   static FileSystemWindow get_window(lvgl::Object child);
 
-
+  static fs::FileSystem::IsExclude is_exclude(const var::StringView name, void *data);
+  static void item_clicked(lv_event_t*e);
 };
 
 } // namespace design
