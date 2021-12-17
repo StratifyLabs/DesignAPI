@@ -16,7 +16,7 @@
 
 namespace design {
 
-class Worker {
+class Worker : public api::ExecutionContext {
 public:
   using Work = void (*)(Worker *);
 
