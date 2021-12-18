@@ -8,6 +8,7 @@
 #include <lvgl/Dropdown.hpp>
 #include <lvgl/Label.hpp>
 #include <lvgl/TextArea.hpp>
+#include <lvgl/Switch.hpp>
 
 #include <json/Json.hpp>
 
@@ -38,6 +39,76 @@ public:
     JSON_ACCESS_STRING(SectionHeadingSchema, name);
     JSON_ACCESS_STRING(SectionHeadingSchema, type);
     JSON_ACCESS_STRING(SectionHeadingSchema, label);
+  };
+
+  class Switch : public lvgl::ObjectAccess<Switch> {
+  public:
+    LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Switch);
+
+    Switch &set_label_as_static(const char *value) {
+      get_label().set_text_as_static(value);
+      return *this;
+    }
+
+    Switch &set_label(const char *value) {
+      get_label().set_text(value);
+      return *this;
+    }
+
+    Switch &set_value(bool value = true) {
+      auto s = get_switch();
+      if( value ) {
+        s.add_state(lvgl::State::checked);
+      } else {
+        s.clear_state(lvgl::State::checked);
+      }
+      return *this;
+    }
+
+    lvgl::Label get_label() const {
+      return find<lvgl::Label>(Names::label);
+    }
+
+
+    lvgl::Switch get_switch() const {
+      return find<lvgl::Switch>(Names::switch_);
+    }
+
+
+    var::StringView get_value() const {
+      return get_switch().has_state(lvgl::State::checked) ? "true" : "false";
+    }
+
+    Switch &set_hint_as_static(const char *value) {
+      Form::set_hint_as_static(find<lvgl::Label>(Names::hint_label), value);
+      return *this;
+    }
+
+    Switch &set_hint(const char *value) {
+      Form::set_hint(find<lvgl::Label>(Names::hint_label), value);
+      return *this;
+    }
+
+    class Schema : public json::JsonValue {
+    public:
+      static constexpr auto schema_type = "switch";
+      Schema() : json::JsonValue(json::JsonObject()) { set_type(schema_type); }
+      Schema(const json::JsonObject object) : json::JsonValue(object) {}
+
+      JSON_ACCESS_STRING(Schema, name);
+      JSON_ACCESS_STRING(Schema, type);
+      JSON_ACCESS_STRING(Schema, label);
+      JSON_ACCESS_STRING(Schema, hint);
+      JSON_ACCESS_STRING(Schema, value);
+    };
+
+  private:
+    friend Form;
+    struct Names {
+      static constexpr auto label = "label";
+      static constexpr auto switch_ = "switch";
+      static constexpr auto hint_label = "SwitchFieldHint";
+    };
   };
 
   class LineField : public lvgl::ObjectAccess<LineField> {
@@ -206,10 +277,7 @@ public:
       return *this;
     }
 
-    Select &set_value(const char *value) {
-      get_dropdown().set_text(value);
-      return *this;
-    }
+    Select &set_value(const char *value);
 
     class Schema : public json::JsonValue {
     public:
@@ -258,7 +326,11 @@ public:
 
   Form(const char *name, Schema schema);
 
+  json::JsonObject get_json_object() const;
+  Form& set_values(json::JsonObject object);
+
   var::StringView get_value(lvgl::Object child) const;
+  Form& set_value(lvgl::Object child, const char * value);
 
   static constexpr auto not_a_value = "$$$notAFormValue";
 

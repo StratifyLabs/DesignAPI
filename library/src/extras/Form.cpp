@@ -10,6 +10,8 @@
 #include <fs/FileSystem.hpp>
 #include <fs/Path.hpp>
 
+#include <printer/Printer.hpp>
+
 #include <json/JsonDocument.hpp>
 
 #include "design/Grid.hpp"
@@ -33,6 +35,67 @@ Form::Form(const char *name) {
     .add_style("form");
 }
 
+json::JsonObject Form::get_json_object() const {
+  API_RETURN_VALUE_IF_ERROR(json::JsonObject());
+  json::JsonObject result;
+  for (const auto &child : *this) {
+    const var::StringView key_name = child.name();
+    const var::StringView value = get_value(child);
+
+    if (value != Form::not_a_value) {
+      result.insert(key_name, json::JsonString(value));
+    }
+  }
+  return result;
+}
+
+Form &Form::set_values(const json::JsonObject object) {
+  printer::Printer().object("setValues", object);
+  for (const auto &child : *this) {
+    const auto value = object.at(child.name());
+    if (value.is_string()) {
+      set_value(child, value.to_cstring());
+    }
+  }
+  return *this;
+}
+
+Form &Form::set_value(lvgl::Object child, const char *value) {
+  {
+    auto input = check_type<LineField>(child);
+    if (input.is_valid()) {
+      input.set_value(value);
+      return *this;
+    }
+  }
+
+  {
+    auto input = check_type<SelectFile>(child);
+    if (input.is_valid()) {
+      input.set_value(value);
+      return *this;
+    }
+  }
+
+  {
+    auto input = check_type<Select>(child);
+    if (input.is_valid()) {
+      input.set_value(value);
+      return *this;
+    }
+  }
+
+  {
+    auto input = check_type<Form::Switch>(child);
+    if (input.is_valid()) {
+      input.set_value(var::StringView(value) == "true");
+      return *this;
+    }
+  }
+
+  return *this;
+}
+
 var::StringView Form::get_value(lvgl::Object child) const {
 
   {
@@ -51,6 +114,13 @@ var::StringView Form::get_value(lvgl::Object child) const {
 
   {
     auto input = check_type<Select>(child);
+    if (input.is_valid()) {
+      return input.get_value();
+    }
+  }
+
+  {
+    auto input = check_type<Form::Switch>(child);
     if (input.is_valid()) {
       return input.get_value();
     }
@@ -138,6 +208,15 @@ Form::Form(const char *name, const Schema schema) {
       continue;
     }
 
+    if (type == Form::Switch::Schema::schema_type) {
+      Form::Switch::Schema input_schema(input);
+      add(Form::Switch(input_schema.get_name_cstring())
+            .set_label_as_static(input_schema.get_label_cstring())
+            .set_hint_as_static(input_schema.get_hint_cstring())
+            .set_value(input_schema.get_value() == "true"));
+      continue;
+    }
+
     if (type == SectionHeadingSchema::schema_type) {
       SectionHeadingSchema input_schema(input);
       const auto name = input_schema.get_name_cstring();
@@ -163,6 +242,26 @@ void Form::set_hint_as_static(lvgl::Label label, const char *value) {
   } else {
     label.clear_flag(Flags::hidden);
   }
+}
+
+Form::Switch::Switch(const char *name) {
+  construct_object(name);
+  add_style(Column::get_style())
+    .add_style("form_col")
+    .set_height(size_from_content)
+    .add(Row()
+           .add_style("form_row")
+           .fill_width()
+           .add(Label(Names::label)
+                  .add_style("form_label")
+                  .set_text_alignment(TextAlignment::left))
+           .add(lvgl::Switch(Names::switch_).add_style("form_switch")))
+    .add(Label(Names::hint_label)
+           .add_style("form_hint")
+           .fill_width()
+           .add_flag(Flags::hidden)
+           .set_text_alignment(TextAlignment::left)
+           .set_text_as_static(""));
 }
 
 Form::LineField::LineField(const char *name) {
@@ -314,4 +413,20 @@ var::StringView Form::Select::get_value() const {
   }
 
   return var::StringView();
+}
+
+Form::Select &Form::Select::set_value(const char *value) {
+  auto dropdown = get_dropdown();
+  const auto option_list = var::StringView(dropdown.get_options()).split("\n");
+
+  u32 selected = 0;
+  for (const auto &option : option_list) {
+    if (option == value) {
+      dropdown.set_selected(selected);
+      return *this;
+    }
+    ++selected;
+  }
+
+  return *this;
 }
