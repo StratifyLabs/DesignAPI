@@ -16,6 +16,26 @@
 
 namespace design {
 
+class ModelScope : public thread::Mutex::Scope {
+
+public:
+  struct Construct {
+    thread::Mutex mutex = thread::Mutex(
+      thread::Mutex::Attributes().set_type(thread::Mutex::Type::recursive));
+    size_t lock_count = 0;
+    pthread_t pthread_scoped{};
+
+    bool is_available() const;
+  };
+
+  ModelScope(Construct &options);
+  ~ModelScope();
+
+private:
+  Construct *m_construct;
+
+};
+
 class Worker : public api::ExecutionContext {
 public:
   using Work = void (*)(Worker *);
