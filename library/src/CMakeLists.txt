@@ -10,6 +10,7 @@ set(SOURCES
 
 	extras/CheckList.cpp
 	extras/FileSystemWindow.cpp
+	extras/FileTextArea.cpp
 	extras/FormList.cpp
 	extras/Form.cpp
 

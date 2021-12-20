@@ -9,6 +9,7 @@ set(SOURCES
 	design/Modal.hpp
 	design/Worker.hpp
 
+	design/extras/FileTextArea.hpp
 	design/extras/FileSystemWindow.hpp
 	design/extras/CheckList.hpp
 	design/extras/FormList.hpp
