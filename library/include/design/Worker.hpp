@@ -37,8 +37,11 @@ private:
 };
 
 class Worker : public api::ExecutionContext {
+  using VoidTask = void (*)(void*);
 public:
+
   using Work = void (*)(Worker *);
+
 
   Worker() : m_cond(m_mutex) {}
   Worker(lvgl::Runtime *runtime, Work work);
@@ -56,18 +59,23 @@ public:
   lvgl::Runtime &runtime() { return *m_runtime; }
   const lvgl::Runtime &runtime() const { return *m_runtime; }
 
-  Worker &update_runtime(void *user_data, void (*task)(void *));
+  Worker& notify(lv_obj_t * object);
 
-  bool is_running() const {
-    return m_thread.is_valid() && m_thread.is_running();
+  template<class ArgumentType> Worker& update_runtime(ArgumentType * user_data, void (*task)(ArgumentType*)){
+    update_runtime_task(user_data, reinterpret_cast<VoidTask>(task));
+    return *this;
   }
 
+  bool is_running() const;
+
   Worker &start(const thread::Thread::Attributes &thread_attributes = {});
+  Worker &wait_runtime_task();
 
 private:
   lvgl::Runtime *m_runtime = nullptr;
   thread::Mutex m_mutex;
   thread::Cond m_cond;
+  api::ProgressCallback * m_progress_callback = nullptr;
 
   void *m_user_data = nullptr;
   void (*m_user_task)(void *) = nullptr;
@@ -82,8 +90,12 @@ private:
   void lock_user_data(void *user_data, void (*task)(void *));
   void unlock_user_data();
 
+  void update_runtime_task(void *user_data, void (*task)(void *));
+
   static void runtime_task_function(void *context);
   void runtime_task();
+
+  static void notify_task(lv_obj_t * object);
 };
 
 } // namespace design

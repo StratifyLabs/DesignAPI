@@ -3,6 +3,7 @@
 //
 
 #include <lvgl/Generic.hpp>
+#include <lvgl/Event.hpp>
 
 #include "design/Worker.hpp"
 
@@ -69,15 +70,20 @@ void Worker::lock_user_data(void *user_data, void (*task)(void *)) {
 
 void Worker::unlock_user_data() {
   thread::Mutex::Scope ms(m_cond.mutex());
+  api::ErrorScope error_scope;
   m_user_task = nullptr;
   m_user_data = nullptr;
   m_cond.signal();
 }
 
-Worker &Worker::update_runtime(void *user_data, void (*task)(void *)) {
+Worker &Worker::wait_runtime_task(){
+  lock_user_data(nullptr, nullptr);
+  return *this;
+}
+
+void Worker::update_runtime_task(void *user_data, void (*task)(void *)) {
   lock_user_data(user_data, task);
   runtime().push(this, runtime_task_function);
-  return *this;
 }
 
 void Worker::runtime_task_function(void *context) {
@@ -87,4 +93,16 @@ void Worker::runtime_task_function(void *context) {
 void Worker::runtime_task() {
   m_user_task(m_user_data);
   unlock_user_data();
+}
+
+void Worker::notify_task(lv_obj_t * object) {
+  Event::send(Generic(object), EventCode::notified);
+}
+
+Worker &Worker::notify(lv_obj_t *object) {
+  return update_runtime<lv_obj_t>(object, notify_task);
+}
+
+bool Worker::is_running() const {
+  return m_thread.is_valid() && m_thread.is_running();
 }

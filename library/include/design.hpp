@@ -9,6 +9,7 @@ namespace design {}
 #include "design/Card.hpp"
 #include "design/Grid.hpp"
 #include "design/HorizontalLine.hpp"
+#include "design/Modal.hpp"
 #include "design/Typography.hpp"
 #include "design/Worker.hpp"
 

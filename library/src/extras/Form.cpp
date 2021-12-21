@@ -348,11 +348,11 @@ void Form::SelectFile::handle_clicked(lv_event_t *e) {
   Modal(Names::select_file_modal)
     .add(FileSystemWindow(*new_data)
            .add_style("modal_content")
-           .add_style("modal_content_enabled", State::user1)
+           .add_style("modal_content_enabled", Modal::enabled)
            .set_width(80_percent)
            .set_height(80_percent)
            .set_alignment(Alignment::top_middle)
-           .add_state(State::user1)
+           .add_state(Modal::enabled)
            .set_opacity(Opacity::transparent)
            .add_event_callback(EventCode::notified, handle_notified));
 }
@@ -370,10 +370,8 @@ void Form::SelectFile::handle_notified(lv_event_t *e) {
                                   : fs_data->relative_path);
   }
 
-  self.get<Generic>().clear_state(State::user1);
-  self.get_parent().get<Generic>().clear_state(State::user1);
-
-  self.get_parent().remove_later(300_milliseconds);
+  auto modal = Event::find_parent<Modal>(e,Names::select_file_modal);
+  modal.close(300_milliseconds);
 
   Event::send(
     SelectFile(reinterpret_cast<lv_obj_t *>(fs_data->user_data)),

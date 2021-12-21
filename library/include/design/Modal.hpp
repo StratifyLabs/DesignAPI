@@ -11,9 +11,19 @@ namespace design {
 
 class Modal : public lvgl::ObjectAccess<Modal> {
 public:
+
+  static constexpr auto enabled = lvgl::State::user1;
+
   LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Modal);
 
+  Modal & set_enabled(bool value = true);
+
+  Modal & close(chrono::MicroTime delay);
+
 private:
+  struct Names {
+    static constexpr auto content_container = "ContentContainer";
+  };
 
 };
 
