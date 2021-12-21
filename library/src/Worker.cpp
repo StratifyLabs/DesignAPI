@@ -108,5 +108,8 @@ bool Worker::is_running() const {
 }
 
 Worker &Worker::notify_associated_object() {
-  return notify(associated_object());
+  if( associated_object() ) {
+    return notify(associated_object());
+  }
+  return *this;
 }
