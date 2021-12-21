@@ -32,8 +32,7 @@ public:
   ~ModelScope();
 
 private:
-  Construct *m_construct;
-
+  Construct *m_construct = nullptr;
 };
 
 class Worker : public api::ExecutionContext {
@@ -41,8 +40,6 @@ class Worker : public api::ExecutionContext {
 public:
 
   using Work = void (*)(Worker *);
-
-
   Worker() : m_cond(m_mutex) {}
   Worker(lvgl::Runtime *runtime, Work work);
 
@@ -60,9 +57,11 @@ public:
   const lvgl::Runtime &runtime() const { return *m_runtime; }
 
   Worker& notify(lv_obj_t * object);
+  Worker& notify_associated_object();
 
-  template<class ArgumentType> Worker& update_runtime(ArgumentType * user_data, void (*task)(ArgumentType*)){
-    update_runtime_task(user_data, reinterpret_cast<VoidTask>(task));
+  template<class ArgumentType> Worker&
+  push_task_to_runtime(ArgumentType * user_data, void (*task)(ArgumentType*)){
+    push_task_void_to_runtime(user_data, reinterpret_cast<VoidTask>(task));
     return *this;
   }
 
@@ -75,25 +74,20 @@ private:
   lvgl::Runtime *m_runtime = nullptr;
   thread::Mutex m_mutex;
   thread::Cond m_cond;
-  api::ProgressCallback * m_progress_callback = nullptr;
-
   void *m_user_data = nullptr;
   void (*m_user_task)(void *) = nullptr;
-
   Work m_work_callback = nullptr;
   thread::Thread m_thread;
+  API_AF(Worker,lv_obj_t*,associated_object,nullptr);
 
   void move_worker(Worker &a);
-
   static void *thread_work_function(void *args);
   void work_function();
   void lock_user_data(void *user_data, void (*task)(void *));
   void unlock_user_data();
-
-  void update_runtime_task(void *user_data, void (*task)(void *));
-
-  static void runtime_task_function(void *context);
-  void runtime_task();
+  void push_task_void_to_runtime(void *user_data, void (*task)(void *));
+  static void execute_runtime_task_function(void *context);
+  void execute_runtime_task();
 
   static void notify_task(lv_obj_t * object);
 };

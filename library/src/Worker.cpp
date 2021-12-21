@@ -81,16 +81,16 @@ Worker &Worker::wait_runtime_task(){
   return *this;
 }
 
-void Worker::update_runtime_task(void *user_data, void (*task)(void *)) {
+void Worker::push_task_void_to_runtime(void *user_data, void (*task)(void *)) {
   lock_user_data(user_data, task);
-  runtime().push(this, runtime_task_function);
+  runtime().push(this, execute_runtime_task_function);
 }
 
-void Worker::runtime_task_function(void *context) {
-  reinterpret_cast<Worker *>(context)->runtime_task();
+void Worker::execute_runtime_task_function(void *context) {
+  reinterpret_cast<Worker *>(context)->execute_runtime_task();
 }
 
-void Worker::runtime_task() {
+void Worker::execute_runtime_task() {
   m_user_task(m_user_data);
   unlock_user_data();
 }
@@ -100,9 +100,13 @@ void Worker::notify_task(lv_obj_t * object) {
 }
 
 Worker &Worker::notify(lv_obj_t *object) {
-  return update_runtime<lv_obj_t>(object, notify_task);
+  return push_task_to_runtime<lv_obj_t>(object, notify_task);
 }
 
 bool Worker::is_running() const {
   return m_thread.is_valid() && m_thread.is_running();
+}
+
+Worker &Worker::notify_associated_object() {
+  return notify(associated_object());
 }
