@@ -5,6 +5,7 @@
 
 #include <api/api.hpp>
 
+#include <json/Json.hpp>
 #include <lvgl/ObjectAccess.hpp>
 
 namespace design {
@@ -31,6 +32,13 @@ class Heading4 : public lvgl::ObjectAccess<Heading4> {
 public:
   Heading4(const char * name, const char * title);
   Heading4(const char * title);
+};
+
+class Span : public lvgl::ObjectAccess<Span> {
+public:
+  LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Span);
+  Span(const char * name, const char * content);
+
 };
 
 class Paragraph : public lvgl::ObjectAccess<Paragraph> {

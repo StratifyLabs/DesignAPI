@@ -13,4 +13,8 @@
 
 #define DESIGN_INCBIN_DATA(NAME) design_incbin_##NAME##_data
 
+#include <sdk/types.h>
+
+#define DESIGN_DECLARE_NAME(NAME) static constexpr auto NAME = MCU_STRINGIFY(NAME)
+
 #endif // DESIGNAPI_DESIGN_MACROS_H_

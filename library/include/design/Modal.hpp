@@ -17,7 +17,6 @@ public:
   LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Modal);
 
   Modal & set_enabled(bool value = true);
-
   Modal & close(chrono::MicroTime delay);
 
 private:

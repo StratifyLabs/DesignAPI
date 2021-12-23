@@ -12,7 +12,7 @@ namespace design {
 
 class Toast : public lvgl::ObjectAccess<Toast> {
 public:
-  Toast(Screen parent);
+  Toast();
 
 private:
 

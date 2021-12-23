@@ -10,7 +10,6 @@
 using namespace lvgl;
 using namespace design;
 
-
 Modal::Modal(const char * name){
   construct_object(name);
   add_style("modal");

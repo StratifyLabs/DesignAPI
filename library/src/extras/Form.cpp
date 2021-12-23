@@ -370,7 +370,7 @@ void Form::SelectFile::handle_notified(lv_event_t *e) {
                                   : fs_data->relative_path);
   }
 
-  auto modal = Event::find_parent<Modal>(e,Names::select_file_modal);
+  auto modal = Event(e).find_parent<Modal>(Names::select_file_modal);
   modal.close(300_milliseconds);
 
   Event::send(

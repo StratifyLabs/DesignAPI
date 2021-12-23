@@ -3,7 +3,7 @@
 #ifndef DESIGNAPI_DESIGN_GRID_HPP_
 #define DESIGNAPI_DESIGN_GRID_HPP_
 
-#include <api/api.hpp>
+#include <json/Json.hpp>
 
 #include <lvgl/ObjectAccess.hpp>
 
@@ -13,6 +13,9 @@ class NakedContainer : public lvgl::ObjectAccess<NakedContainer> {
 public:
   explicit NakedContainer(const char *name = "");
   explicit NakedContainer(lv_obj_t *object) { m_object = object; }
+
+
+
 };
 
 class Container : public lvgl::ObjectAccess<Container> {
@@ -20,6 +23,14 @@ public:
   explicit Container(const char *name = "");
   explicit Container(lv_obj_t *object) { m_object = object; }
   explicit Container(Object &object) { m_object = object.object(); }
+
+#if THIS_IS_NOT_READY
+  Container& update_view(const json::JsonObject json_object);
+  Container& update_model(json::JsonObject json_object);
+  static json::JsonObject get_value(lvgl::Object object);
+  static void set_value(lvgl::Object object, json::JsonObject value);
+#endif
+
 };
 
 
@@ -77,6 +88,7 @@ public:
       lvgl::SetFlexAlign().set_main(lvgl::FlexAlign::space_evenly));
   }
 };
+
 
 } // namespace design
 
