@@ -12,6 +12,8 @@
 
 #include <json/Json.hpp>
 
+#include "../macros.h"
+
 #include "../Typography.hpp"
 #include "FileSystemWindow.hpp"
 
@@ -239,15 +241,19 @@ public:
   private:
     friend Form;
     struct Names {
-      static constexpr auto select_file_label = "Label";
       static constexpr auto hint_label = "SelectFileHint";
-      static constexpr auto select_file_button = "Button";
-      static constexpr auto select_file_modal = "Modal";
-      static constexpr auto selected_path_label = "FilePath";
+
+      DESIGN_DECLARE_NAME(select_file_label);
+      DESIGN_DECLARE_NAME(selected_path_label);
+      DESIGN_DECLARE_NAME(select_file_modal);
+      DESIGN_DECLARE_NAME(select_file_button);
+      DESIGN_DECLARE_NAME(form_row);
+
     };
 
     static void handle_clicked(lv_event_t *e);
     static void handle_notified(lv_event_t *e);
+    static void handle_text_focused(lv_event_t *e);
   };
 
   class Select : public lvgl::ObjectAccess<Select> {

@@ -303,6 +303,7 @@ Form::LineField::LineField(const char *name) {
 
 Form::SelectFile::SelectFile(Data &data) {
   construct_object(data.cast_as_name());
+  // FS user data points to the SelectFile Object
   data.set_user_data(m_object);
 
   add_style(Column::get_style())
@@ -313,15 +314,18 @@ Form::SelectFile::SelectFile(Data &data) {
            .fill_width()
            .set_text_alignment(TextAlignment::left)
            .set_text_as_static(""))
-    .add(Row()
+    .add(Row(Names::form_row)
            .add_style("form_row")
            .add(TextArea(Names::selected_path_label)
                   .add_style("form_field")
                   .set_flex_grow()
-                  .set_text_as_static(""))
+                  .set_text_as_static("")
+                  .add_event_callback(
+                    EventCode::focused,
+                    handle_text_focused))
            .add(Button(Names::select_file_button)
                   .add_style("btn_md btn_outline_primary")
-                  .add_label_as_static(LV_SYMBOL_DRIVE)
+                  .add_label_as_static(LV_SYMBOL_DIRECTORY)
                   .add_event_callback(EventCode::clicked, handle_clicked)))
     .add(Label(Names::hint_label)
            .add_style("form_hint")
@@ -331,10 +335,32 @@ Form::SelectFile::SelectFile(Data &data) {
            .set_text_as_static(""));
 }
 
+void Form::SelectFile::handle_text_focused(lv_event_t *e) {
+  // change the button to an OK check box
+  printf("text focused\n");
+  auto label = Event(e)
+                 .target()
+                 .get_parent()
+                 .find<Button>(Names::select_file_button)
+                 .get_child(0)
+                 .get<Label>();
+
+  label.set_text_as_static(LV_SYMBOL_OK);
+}
+
 void Form::SelectFile::handle_clicked(lv_event_t *e) {
   const auto event = Event(e);
+
   auto select_file = event.target().get_parent().get_parent().get<SelectFile>();
   auto *file_system_data = select_file.user_data<FileSystemWindow::Data>();
+
+  auto label = event.target().get_child(0).get<Label>();
+
+  if (var::StringView(label.get_text()) == LV_SYMBOL_OK) {
+    Event::send(select_file, EventCode::notified);
+    label.set_text_as_static(LV_SYMBOL_DIRECTORY);
+    return;
+  }
 
   auto *new_data = file_system_data->needs_free()
                      ? &FileSystemWindow::Data::create()
@@ -373,9 +399,7 @@ void Form::SelectFile::handle_notified(lv_event_t *e) {
   auto modal = Event(e).find_parent<Modal>(Names::select_file_modal);
   modal.close(300_milliseconds);
 
-  Event::send(
-    SelectFile(reinterpret_cast<lv_obj_t *>(fs_data->user_data)),
-    EventCode::notified);
+  Event::send(select_file, EventCode::notified);
 }
 
 Form::Select::Select(const char *name) {
