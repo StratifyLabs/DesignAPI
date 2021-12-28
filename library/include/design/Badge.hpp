@@ -25,10 +25,12 @@ public:
 
   Badge & set_text_as_static(const char * text){
     find<lvgl::Label>(Names::label).set_text_as_static(text);
+    return *this;
   }
 
   Badge & set_text(const char * text){
     find<lvgl::Label>(Names::label).set_text(text);
+    return *this;
   }
 
 private:
