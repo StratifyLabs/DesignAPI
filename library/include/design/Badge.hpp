@@ -3,8 +3,9 @@
 #ifndef DESIGNAPI_DESIGN_BADGE_HPP_
 #define DESIGNAPI_DESIGN_BADGE_HPP_
 
-#include <api/api.hpp>
 #include <lvgl/Label.hpp>
+
+#include "macros.h"
 
 namespace design {
 
@@ -15,14 +16,26 @@ public:
   explicit Badge(Object &object) { m_object = object.object(); }
 
   Badge & add_label_as_static(const char * text){
-    return add(lvgl::Label().set_text_as_static(text).center());
+    return add(lvgl::Label(Names::label).set_text_as_static(text).center());
   }
 
   Badge & add_label(const char * text){
-    return add(lvgl::Label().set_text(text).center());
+    return add(lvgl::Label(Names::label).set_text(text).center());
+  }
+
+  Badge & set_text_as_static(const char * text){
+    find<lvgl::Label>(Names::label).set_text_as_static(text);
+  }
+
+  Badge & set_text(const char * text){
+    find<lvgl::Label>(Names::label).set_text(text);
   }
 
 private:
+
+  struct Names {
+    DESIGN_DECLARE_NAME(label);
+  };
 
 };
 
