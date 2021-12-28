@@ -24,8 +24,14 @@ protected:
   static void set_hint(lvgl::Label label, const char *value);
   static void set_hint_as_static(lvgl::Label label, const char *value);
 
+
+  static void set_error_message(lvgl::Object form_object, const char * message);
+  static void set_error_message_as_static(lvgl::Object form_object, const char * message);
+  static void hide_error_message(lvgl::Object form_object);
+
 public:
   LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Form);
+
 
   using SectionHeading = Heading2;
 
@@ -117,6 +123,20 @@ public:
   public:
     LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(LineField);
 
+    LineField& set_error_message(const char * message){
+      Form::set_error_message(*this, message);
+      return *this;
+    }
+    LineField& set_error_message_as_static(const char * message){
+      Form::set_error_message_as_static(*this, message);
+      return *this;
+    }
+
+    LineField& hide_error_message(){
+      Form::hide_error_message(*this);
+      return *this;
+    }
+
     LineField &set_label_as_static(const char *value) {
       get_label().set_text_as_static(value);
       return *this;
@@ -184,6 +204,21 @@ public:
     explicit SelectFile(Data &data);
     explicit SelectFile(lv_obj_t *object) { m_object = object; }
 
+    SelectFile& set_error_message(const char * message){
+      Form::set_error_message(*this, message);
+      return *this;
+    }
+    SelectFile& set_error_message_as_static(const char * message){
+      Form::set_error_message_as_static(*this, message);
+      return *this;
+    }
+
+    SelectFile& hide_error_message(){
+      Form::hide_error_message(*this);
+      return *this;
+    }
+
+
     lvgl::Label get_label() const {
       return find<lvgl::Label>(Names::select_file_label);
     }
@@ -242,13 +277,11 @@ public:
     friend Form;
     struct Names {
       static constexpr auto hint_label = "SelectFileHint";
-
       DESIGN_DECLARE_NAME(select_file_label);
       DESIGN_DECLARE_NAME(selected_path_label);
       DESIGN_DECLARE_NAME(select_file_modal);
       DESIGN_DECLARE_NAME(select_file_button);
       DESIGN_DECLARE_NAME(form_row);
-
     };
 
     static void handle_clicked(lv_event_t *e);
@@ -262,6 +295,20 @@ public:
 
     Select &set_label_as_static(const char *value) {
       get_label().set_text_as_static(value);
+      return *this;
+    }
+
+    Select& set_error_message(const char * message){
+      Form::set_error_message(*this, message);
+      return *this;
+    }
+    Select& set_error_message_as_static(const char * message){
+      Form::set_error_message_as_static(*this, message);
+      return *this;
+    }
+
+    Select& hide_error_message(){
+      Form::hide_error_message(*this);
       return *this;
     }
 
@@ -341,6 +388,14 @@ public:
   static constexpr auto not_a_value = "$$$notAFormValue";
 
 private:
+
+  friend LineField;
+  friend SelectFile;
+
+  struct Names {
+    DESIGN_DECLARE_NAME(error_badge);
+  };
+
   template <class InputClass> InputClass check_type(lvgl::Object object) const {
     if (object
           .find<InputClass, lvgl::IsAssertOnFail::no>(

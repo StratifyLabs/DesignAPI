@@ -17,6 +17,7 @@
 #include "design/Grid.hpp"
 #include "design/extras/Form.hpp"
 
+#include "design/Badge.hpp"
 #include "design/Modal.hpp"
 #include "design/extras/FileSystemWindow.hpp"
 
@@ -269,10 +270,18 @@ Form::LineField::LineField(const char *name) {
   add_style(Column::get_style())
     .add_style("form_col")
     .set_height(size_from_content)
-    .add(Label(Names::label)
-           .add_style("form_label")
+    .add(Row()
            .fill_width()
-           .set_text_alignment(TextAlignment::left))
+           .justify_space_between()
+           .add(Label(Names::label)
+                  .add_style("form_label")
+                  .fill_width()
+                  .set_text_alignment(TextAlignment::left)
+                  .set_text_as_static(""))
+           .add(Badge(Form::Names::error_badge)
+                  .add_label("")
+                  .add_style("form_error_badge")
+                  .add_flag(Flags::hidden)))
     .add(Row()
            .add_style("form_row")
            .fill_width()
@@ -309,20 +318,25 @@ Form::SelectFile::SelectFile(Data &data) {
   add_style(Column::get_style())
     .add_style("form_col")
     .set_height(size_from_content)
-    .add(Label(Names::select_file_label)
-           .add_style("form_label")
+    .add(Row()
            .fill_width()
-           .set_text_alignment(TextAlignment::left)
-           .set_text_as_static(""))
+           .justify_space_between()
+           .add(Label(Names::select_file_label)
+                  .add_style("form_label")
+                  .fill_width()
+                  .set_text_alignment(TextAlignment::left)
+                  .set_text_as_static(""))
+           .add(Badge(Form::Names::error_badge)
+                  .add_label("")
+                  .add_style("form_error_badge")
+                  .add_flag(Flags::hidden)))
     .add(Row(Names::form_row)
            .add_style("form_row")
            .add(TextArea(Names::selected_path_label)
                   .add_style("form_field")
                   .set_flex_grow()
                   .set_text_as_static("")
-                  .add_event_callback(
-                    EventCode::focused,
-                    handle_text_focused))
+                  .add_event_callback(EventCode::focused, handle_text_focused))
            .add(Button(Names::select_file_button)
                   .add_style("btn_md btn_outline_primary")
                   .add_label_as_static(LV_SYMBOL_DIRECTORY)
@@ -337,7 +351,6 @@ Form::SelectFile::SelectFile(Data &data) {
 
 void Form::SelectFile::handle_text_focused(lv_event_t *e) {
   // change the button to an OK check box
-  printf("text focused\n");
   auto label = Event(e)
                  .target()
                  .get_parent()
@@ -402,15 +415,35 @@ void Form::SelectFile::handle_notified(lv_event_t *e) {
   Event::send(select_file, EventCode::notified);
 }
 
+void Form::set_error_message(Object form_object, const char *message) {
+  form_object.find<Badge>(Names::error_badge).clear_flag(Flags::hidden).set_text(message);
+}
+
+void Form::set_error_message_as_static(Object form_object, const char *message) {
+  form_object.find<Badge>(Names::error_badge).clear_flag(Flags::hidden).set_text_as_static(message);
+}
+
+void Form::hide_error_message(Object form_object) {
+  form_object.find<Badge>(Names::error_badge).add_flag(Flags::hidden);
+}
+
 Form::Select::Select(const char *name) {
   construct_object(name);
   add_style(Column::get_style())
     .add_style("form_col")
     .set_height(size_from_content)
-    .add(Label(Names::label)
-           .add_style("form_label")
+    .add(Row()
            .fill_width()
-           .set_text_alignment(TextAlignment::left))
+           .justify_space_between()
+           .add(Label(Names::label)
+                  .add_style("form_label")
+                  .fill_width()
+                  .set_text_alignment(TextAlignment::left)
+                  .set_text_as_static(""))
+           .add(Badge(Form::Names::error_badge)
+                  .add_label("")
+                  .add_style("form_error_badge")
+                  .add_flag(Flags::hidden)))
     .add(Row()
            .add_style("form_row")
            .fill_width()
