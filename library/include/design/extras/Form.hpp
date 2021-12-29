@@ -30,6 +30,11 @@ protected:
   static void hide_error_message(lvgl::Object form_object);
 
 public:
+  enum class IsValid {
+    no, yes
+  };
+
+
   LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Form);
 
 
@@ -287,6 +292,8 @@ public:
     static void handle_clicked(lv_event_t *e);
     static void handle_notified(lv_event_t *e);
     static void handle_text_focused(lv_event_t *e);
+
+    IsValid validate_value(Data * data);
   };
 
   class Select : public lvgl::ObjectAccess<Select> {

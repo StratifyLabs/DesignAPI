@@ -372,6 +372,7 @@ void Form::SelectFile::handle_clicked(lv_event_t *e) {
   if (var::StringView(label.get_text()) == LV_SYMBOL_OK) {
     Event::send(select_file, EventCode::notified);
     label.set_text_as_static(LV_SYMBOL_DIRECTORY);
+    select_file.validate_value(file_system_data);
     return;
   }
 
@@ -384,6 +385,7 @@ void Form::SelectFile::handle_clicked(lv_event_t *e) {
     *new_data = *file_system_data;
   }
 
+  // create the modal
   Modal(Names::select_file_modal)
     .add(FileSystemWindow(*new_data)
            .add_style("modal_content")
@@ -412,15 +414,68 @@ void Form::SelectFile::handle_notified(lv_event_t *e) {
   auto modal = Event(e).find_parent<Modal>(Names::select_file_modal);
   modal.close(300_milliseconds);
 
+  select_file.validate_value(fs_data);
   Event::send(select_file, EventCode::notified);
 }
 
-void Form::set_error_message(Object form_object, const char *message) {
-  form_object.find<Badge>(Names::error_badge).clear_flag(Flags::hidden).set_text(message);
+Form::IsValid Form::SelectFile::validate_value(Data *data) {
+  const auto full_path = data->is_absolute_path ? var::PathString(get_value())
+                                                : data->base_path / get_value();
+  if (!fs::FileSystem().exists(full_path)) {
+    // set the error
+    printf("`%s` does not exist\n", full_path.cstring());
+    set_error_message("path does not exist");
+    return IsValid::no;
+  }
+
+  // check if the item must be a file or directory
+  const auto info = fs::FileSystem().get_info(full_path);
+  if (data->is_select_file && !info.is_file()) {
+    set_error_message("Selection is not a file");
+    return IsValid::no;
+  }
+
+  if (data->is_select_folder && !info.is_directory()) {
+    set_error_message("Selection is not a folder");
+    return IsValid::no;
+  }
+
+  const var::StringView suffix_filter = data->suffix_filter;
+  if( !suffix_filter.is_empty() ){
+    //make sure the suffix is in the list
+    const auto suffix_list = suffix_filter.split(",");
+    bool is_suffix_ok = false;
+    const auto value_suffix = fs::Path::suffix(full_path);
+    for(const auto & suffix: suffix_list){
+      if( value_suffix == suffix ){
+        is_suffix_ok = true;
+        break;
+      }
+    }
+
+    if( is_suffix_ok == false ){
+      set_error_message("File type is not allowed");
+      return IsValid::no;
+    }
+
+  }
+
+  hide_error_message();
+  return IsValid::yes;
 }
 
-void Form::set_error_message_as_static(Object form_object, const char *message) {
-  form_object.find<Badge>(Names::error_badge).clear_flag(Flags::hidden).set_text_as_static(message);
+void Form::set_error_message(Object form_object, const char *message) {
+  form_object.find<Badge>(Names::error_badge)
+    .clear_flag(Flags::hidden)
+    .set_text(message);
+}
+
+void Form::set_error_message_as_static(
+  Object form_object,
+  const char *message) {
+  form_object.find<Badge>(Names::error_badge)
+    .clear_flag(Flags::hidden)
+    .set_text_as_static(message);
 }
 
 void Form::hide_error_message(Object form_object) {
