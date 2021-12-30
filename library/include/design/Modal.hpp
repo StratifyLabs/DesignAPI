@@ -4,29 +4,27 @@
 #define DESIGNAPI_DESIGN_MODAL_HPP_
 
 #include <api/api.hpp>
-
-#include <lvgl/ObjectAccess.hpp>
+#include <lvgl/Generic.hpp>
 
 namespace design {
 
 class Modal : public lvgl::ObjectAccess<Modal> {
 public:
-
   static constexpr auto enabled = lvgl::State::user1;
 
   LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Modal);
 
-  Modal & set_enabled(bool value = true);
-  Modal & close(chrono::MicroTime delay);
+  Modal &set_enabled(bool value = true);
+  Modal &close(chrono::MicroTime delay);
+
+  Modal &add_content(lv_obj_t * object);
 
 private:
   struct Names {
     static constexpr auto content_container = "ContentContainer";
   };
-
 };
 
-}
-
+} // namespace design
 
 #endif // DESIGNAPI_DESIGN_MODAL_HPP_

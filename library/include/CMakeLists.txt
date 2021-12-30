@@ -16,6 +16,8 @@ set(SOURCES
 	design/extras/FileSystemWindow.hpp
 	design/extras/CheckList.hpp
 	design/extras/FormList.hpp
+	design/extras/Form.hpp
+	design/extras/Prompt.hpp
 
 	design.hpp
 	PARENT_SCOPE

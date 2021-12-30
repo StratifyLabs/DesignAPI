@@ -13,6 +13,7 @@ set(SOURCES
 	extras/FileTextArea.cpp
 	extras/FormList.cpp
 	extras/Form.cpp
+	extras/Prompt.cpp
 
 	Grid.cpp
 	Typography.cpp
