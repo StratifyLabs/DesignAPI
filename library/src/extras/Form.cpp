@@ -423,7 +423,6 @@ Form::IsValid Form::SelectFile::validate_value(Data *data) {
                                                 : data->base_path / get_value();
   if (!fs::FileSystem().exists(full_path)) {
     // set the error
-    printf("`%s` does not exist\n", full_path.cstring());
     set_error_message("path does not exist");
     return IsValid::no;
   }

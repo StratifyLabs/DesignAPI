@@ -100,6 +100,10 @@ FileSystemWindow::FileSystemWindow(Data &data) {
         .add_label_as_static(data.back_symbol)
         .add_event_callback(EventCode::clicked, back_button_pressed));
 
+    if( data.relative_path.is_empty() == false ){
+      header_row.find<Button>(Names::back_button).clear_state(State::disabled);
+    }
+
     header_row.add(
       Button(Names::select_button)
         .add_label_as_static(LV_SYMBOL_OK)
@@ -115,7 +119,17 @@ FileSystemWindow::FileSystemWindow(Data &data) {
   {
     auto content_row = find<Generic>(Names::content_area);
     content_row.add_style("form_filesystem");
-    configure_list(content_row);
+
+    if( fs::FileSystem().directory_exists(data.full_path) ){
+      configure_list(content_row);
+    } else if( fs::FileSystem().exists(data.full_path) ){
+      configure_details(content_row);
+    } else {
+      data.relative_path = "";
+      data.update_full_path();
+      configure_list(content_row);
+    }
+
   }
 }
 
@@ -180,10 +194,12 @@ void FileSystemWindow::configure_details(Generic container) {
       const auto info = fs::FileSystem().get_info(fs_data->full_path);
       const auto file_type = info.is_file() ? "File" : "Device";
 
-      table.set_width(100_percent)
-        .set_height(100_percent)
+      table.fill()
+        .set_radius(0)
+        .set_border_width(0)
         .set_column_count(2)
         .set_row_count(4)
+        .add_style("list_flush")
         .set_column_width(0, half_width)
         .set_column_width(1, half_width)
         .set_cell_value(Table::Cell().set_column(0).set_row(0), "Type")
@@ -214,8 +230,9 @@ void FileSystemWindow::configure_details(Generic container) {
               const auto background_color = rect.background_color();
               const auto mix_color = Color::get_palette(Palette::grey)
                                        .mix(background_color, MixRatio::x10);
-              rect.set_background_color(mix_color).set_background_opacity(
-                Opacity::cover);
+              rect.set_background_color(mix_color)
+                //.set_background_opacity(Opacity::cover)
+              ;
             }
           }
         });
