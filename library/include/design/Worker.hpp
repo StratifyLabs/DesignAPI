@@ -61,7 +61,12 @@ public:
 
   template<class ArgumentType> Worker&
   push_task_to_runtime(ArgumentType * user_data, void (*task)(ArgumentType*)){
-    push_task_void_to_runtime(user_data, reinterpret_cast<VoidTask>(task));
+    push_task_void_to_runtime((void*)user_data, reinterpret_cast<VoidTask>(task));
+    return *this;
+  }
+
+  Worker& push_task_to_runtime(void (*task)(void*)){
+    push_task_void_to_runtime(nullptr, task);
     return *this;
   }
 
