@@ -9,7 +9,7 @@ set(SOURCES
 	Worker.cpp
 
 	extras/CheckList.cpp
-	extras/FileSystemWindow.cpp
+  extras/FileSystemCard.cpp
 	extras/FileTextArea.cpp
 	extras/FormList.cpp
 	extras/Form.cpp

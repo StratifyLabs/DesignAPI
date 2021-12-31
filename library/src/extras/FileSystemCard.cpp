@@ -13,7 +13,7 @@
 #include <fs/Path.hpp>
 
 #include "design/Grid.hpp"
-#include "design/extras/FileSystemWindow.hpp"
+#include "design/extras/FileSystemCard.hpp"
 
 #ifdef __win32
 #define ROOT_DRIVE "C:/"
@@ -24,17 +24,17 @@
 using namespace design;
 using namespace lvgl;
 
-const char *FileSystemWindow::root_drive_path() { return ROOT_DRIVE; }
+const char *FileSystemCard::root_drive_path() { return ROOT_DRIVE; }
 
 var::PathString
-FileSystemWindow::Data::get_path_with_entry(var::StringView entry) const {
+FileSystemCard::Data::get_path_with_entry(var::StringView entry) const {
   if (full_path == root_drive_path()) {
     return full_path & entry;
   }
   return full_path / entry;
 }
 
-void FileSystemWindow::Data::enter_directory(var::StringView name) {
+void FileSystemCard::Data::enter_directory(var::StringView name) {
 
   if (relative_path.is_empty()) {
     relative_path = name;
@@ -45,7 +45,7 @@ void FileSystemWindow::Data::enter_directory(var::StringView name) {
   update_full_path();
 }
 
-void FileSystemWindow::Data::update_full_path() {
+void FileSystemCard::Data::update_full_path() {
   selected_file = "";
   if (!relative_path.is_empty()) {
     if (base_path == root_drive_path()) {
@@ -58,7 +58,7 @@ void FileSystemWindow::Data::update_full_path() {
   }
 }
 
-void FileSystemWindow::Data::exit_directory() {
+void FileSystemCard::Data::exit_directory() {
   if (relative_path.is_empty()) {
     return;
   }
@@ -67,11 +67,11 @@ void FileSystemWindow::Data::exit_directory() {
   update_full_path();
 }
 
-bool FileSystemWindow::Data::is_base_path() const {
+bool FileSystemCard::Data::is_base_path() const {
   return relative_path.is_empty();
 }
 
-FileSystemWindow::FileSystemWindow(Data &data) {
+FileSystemCard::FileSystemCard(Data &data) {
   construct_object(data.cast_as_name());
   add_style("card");
 
@@ -133,7 +133,7 @@ FileSystemWindow::FileSystemWindow(Data &data) {
   }
 }
 
-void FileSystemWindow::select_button_pressed(lv_event_t *e) {
+void FileSystemCard::select_button_pressed(lv_event_t *e) {
   auto window = get_window(Event(e).target());
   auto *fs_data = window.user_data<Data>();
   fs_data->enter_directory(fs_data->selected_file);
@@ -141,14 +141,14 @@ void FileSystemWindow::select_button_pressed(lv_event_t *e) {
   Event::send(window, EventCode::notified);
 }
 
-void FileSystemWindow::cancel_button_pressed(lv_event_t *e) {
+void FileSystemCard::cancel_button_pressed(lv_event_t *e) {
   auto window = get_window(Event(e).target());
   auto *fs_data = window.user_data<Data>();
   fs_data->notify_status = NotifyStatus::cancelled;
   Event::send(window, EventCode::notified);
 }
 
-void FileSystemWindow::back_button_pressed(lv_event_t *e) {
+void FileSystemCard::back_button_pressed(lv_event_t *e) {
   const auto event = Event(e);
 
   auto window = get_window(event.target());
@@ -171,20 +171,20 @@ void FileSystemWindow::back_button_pressed(lv_event_t *e) {
 
 }
 
-FileSystemWindow &FileSystemWindow::update_path(var::StringView path) {
+FileSystemCard &FileSystemCard::update_path(var::StringView path) {
   auto &user_data_path = user_data<Data>()->full_path;
   user_data_path = path;
   find<Label>(Names::path_label).set_text_as_static(user_data_path);
   return *this;
 }
 
-FileSystemWindow FileSystemWindow::get_window(lvgl::Object child) {
+FileSystemCard FileSystemCard::get_window(lvgl::Object child) {
   return child.find_parent<Generic>(Names::top_column)
     .get_parent()
-    .get<FileSystemWindow>();
+    .get<FileSystemCard>();
 }
 
-void FileSystemWindow::configure_details(Generic container) {
+void FileSystemCard::configure_details(Generic container) {
 
   container.clear_flag(Flags::scrollable)
     .clean()
@@ -239,7 +239,7 @@ void FileSystemWindow::configure_details(Generic container) {
     }));
 }
 
-void FileSystemWindow::configure_list(Generic container) {
+void FileSystemCard::configure_list(Generic container) {
   // load the path
 
   container.add_flag(Flags::scrollable).clean().add(List().setup([](List list) {
@@ -302,7 +302,7 @@ void FileSystemWindow::configure_list(Generic container) {
 }
 
 fs::FileSystem::IsExclude
-FileSystemWindow::is_exclude(const var::StringView name, void *data) {
+FileSystemCard::is_exclude(const var::StringView name, void *data) {
   auto *file_system_data = reinterpret_cast<Data *>(data);
   if (!file_system_data->is_show_hidden) {
     if (name.length() && name.at(0) == '.') {
@@ -338,7 +338,7 @@ FileSystemWindow::is_exclude(const var::StringView name, void *data) {
   return fs::FileSystem::IsExclude::no;
 }
 
-void FileSystemWindow::item_clicked(lv_event_t *e) {
+void FileSystemCard::item_clicked(lv_event_t *e) {
   const Event event(e);
   auto list = event.current_target<List>();
   const auto *entry_name = list.get_button_text(event.target());

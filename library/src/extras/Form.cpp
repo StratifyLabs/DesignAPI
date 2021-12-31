@@ -19,7 +19,7 @@
 
 #include "design/Badge.hpp"
 #include "design/Modal.hpp"
-#include "design/extras/FileSystemWindow.hpp"
+#include "design/extras/FileSystemCard.hpp"
 
 using namespace design;
 using namespace lvgl;
@@ -365,7 +365,7 @@ void Form::SelectFile::handle_clicked(lv_event_t *e) {
   const auto event = Event(e);
 
   auto select_file = event.target().get_parent().get_parent().get<SelectFile>();
-  auto *file_system_data = select_file.user_data<FileSystemWindow::Data>();
+  auto *file_system_data = select_file.user_data<FileSystemCard::Data>();
 
   auto label = event.target().get_child(0).get<Label>();
 
@@ -377,7 +377,7 @@ void Form::SelectFile::handle_clicked(lv_event_t *e) {
   }
 
   auto *new_data = file_system_data->needs_free()
-                     ? &FileSystemWindow::Data::create()
+                     ? &FileSystemCard::Data::create()
                      : file_system_data;
 
   if (new_data != file_system_data) {
@@ -387,7 +387,7 @@ void Form::SelectFile::handle_clicked(lv_event_t *e) {
 
   // create the modal
   Modal(Names::select_file_modal)
-    .add(FileSystemWindow(*new_data)
+    .add(FileSystemCard(*new_data)
            .add_style("modal_content")
            .add_style("modal_content_enabled", Modal::enabled)
            .set_width(80_percent)
@@ -404,7 +404,7 @@ void Form::SelectFile::handle_notified(lv_event_t *e) {
   auto select_file
     = SelectFile(reinterpret_cast<lv_obj_t *>(fs_data->user_data));
 
-  if (fs_data->notify_status == FileSystemWindow::NotifyStatus::selected) {
+  if (fs_data->notify_status == FileSystemCard::NotifyStatus::selected) {
     select_file.find<TextArea>(Names::selected_path_label)
       .set_text(
         fs_data->is_absolute_path ? fs_data->full_path

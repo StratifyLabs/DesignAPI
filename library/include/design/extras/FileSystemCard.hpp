@@ -10,7 +10,7 @@
 
 namespace design {
 
-class FileSystemWindow : public lvgl::ObjectAccess<FileSystemWindow> {
+class FileSystemCard : public lvgl::ObjectAccess<FileSystemCard> {
 public:
   enum class NotifyStatus { null, closed, selected, cancelled };
 
@@ -41,7 +41,7 @@ public:
     API_PMAZ(user_data, Data, void*, nullptr);
 
   private:
-    friend FileSystemWindow;
+    friend FileSystemCard;
     void enter_directory(var::StringView name);
     var::PathString get_path_with_entry(var::StringView entry) const;
     void exit_directory();
@@ -49,8 +49,8 @@ public:
     bool is_base_path() const;
   };
 
-  explicit FileSystemWindow(Data &data);
-  explicit FileSystemWindow(lv_obj_t *object) { m_object = object; }
+  explicit FileSystemCard(Data &data);
+  explicit FileSystemCard(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t *get_class() { return api()->window_class; }
 
@@ -70,8 +70,7 @@ private:
     static constexpr auto select_button = "SelectButton";
   };
 
-
-  FileSystemWindow& update_path(var::StringView path);
+  FileSystemCard & update_path(var::StringView path);
   lvgl::Generic get_content() const {
     return find<lvgl::Generic>(Names::content_area);
   }
@@ -82,7 +81,7 @@ private:
   static void select_button_pressed(lv_event_t*e);
   static void cancel_button_pressed(lv_event_t*e);
 
-  static FileSystemWindow get_window(lvgl::Object child);
+  static FileSystemCard get_window(lvgl::Object child);
 
   static fs::FileSystem::IsExclude is_exclude(const var::StringView name, void *data);
   static void item_clicked(lv_event_t*e);

@@ -15,7 +15,7 @@
 #include "../macros.h"
 
 #include "../Typography.hpp"
-#include "FileSystemWindow.hpp"
+#include "FileSystemCard.hpp"
 
 namespace design {
 
@@ -204,7 +204,7 @@ public:
 
   class SelectFile : public lvgl::ObjectAccess<SelectFile> {
   public:
-    using Data = FileSystemWindow::Data;
+    using Data = FileSystemCard::Data;
 
     explicit SelectFile(Data &data);
     explicit SelectFile(lv_obj_t *object) { m_object = object; }
