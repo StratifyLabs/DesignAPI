@@ -8,7 +8,7 @@
 #include <lvgl/Event.hpp>
 #include <lvgl/ObjectAccess.hpp>
 
-#include "../macros.h"
+#include "../macros.hpp"
 
 namespace design {
 

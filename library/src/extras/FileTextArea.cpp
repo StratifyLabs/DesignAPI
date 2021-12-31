@@ -23,7 +23,7 @@ FileTextArea::FileTextArea(Data &data) {
   if (file_size > data.m_buffer.size()) {
     // add a progress bar
 #if 0
-    parent.get<Container>().add(Bar(progress_bar_name)
+    parent.get<Container>().add(Bar(Names::progress_bar)
                                          .set_height(20)
                                          .set_width(100_percent)
                                          .set_alignment(Alignment::bottom_middle));
@@ -33,7 +33,7 @@ FileTextArea::FileTextArea(Data &data) {
     data.set_progress_size(1000 / pages);
     data.set_progress_start(0);
 #if 0
-    parent.find<Bar>(progress_bar_name)
+    parent.find<Bar>(Names::progress_bar)
       .set_mode(Bar::Mode::range)
       .set_start_value(0)
       .set_value(data.progress_size())

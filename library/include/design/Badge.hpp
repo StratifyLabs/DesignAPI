@@ -5,7 +5,7 @@
 
 #include <lvgl/Label.hpp>
 
-#include "macros.h"
+#include "macros.hpp"
 
 namespace design {
 

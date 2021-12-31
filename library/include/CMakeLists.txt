@@ -10,7 +10,7 @@ set(SOURCES
 	design/Worker.hpp
 
 	design/incbin.h
-	design/macros.h
+	design/macros.hpp
 
 	design/extras/FileTextArea.hpp
   design/extras/FileSystemCard.hpp

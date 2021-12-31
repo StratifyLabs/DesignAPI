@@ -7,6 +7,8 @@
 
 #include <lvgl/TextArea.hpp>
 
+#include "../macros.hpp"
+
 namespace design {
 
 class FileTextArea : public lvgl::ObjectAccess<FileTextArea> {
@@ -189,6 +191,11 @@ public:
     api()->textarea_cursor_down(object());
     return *this;
   }
+
+private:
+  struct Names {
+    DESIGN_DECLARE_NAME(progress_bar);
+  };
 };
 
 }

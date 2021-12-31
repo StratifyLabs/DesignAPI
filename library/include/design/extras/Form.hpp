@@ -12,7 +12,7 @@
 
 #include <json/Json.hpp>
 
-#include "../macros.h"
+#include "../macros.hpp"
 
 #include "../Typography.hpp"
 #include "FileSystemCard.hpp"
