@@ -16,5 +16,6 @@
 #include <sdk/types.h>
 
 #define DESIGN_DECLARE_NAME(NAME) static constexpr auto NAME = MCU_STRINGIFY(NAME)
+#define DESIGN_DECLARE_NAME_VALUE(NAME, VALUE) static constexpr auto NAME = MCU_STRINGIFY(VALUE)
 
 #endif // DESIGNAPI_DESIGN_MACROS_H_
