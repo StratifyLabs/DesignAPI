@@ -14,6 +14,7 @@ public:
   explicit Card(const char *name = "");
   explicit Card(lv_obj_t *object) { m_object = object; }
   explicit Card(Object &object) { m_object = object.object(); }
+  LVGL_OBJECT_ACCESS_GET_CLASS(obj_class)
 
   class Header : public lvgl::ObjectAccess<Header>{
   public:

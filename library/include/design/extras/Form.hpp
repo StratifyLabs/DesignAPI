@@ -7,8 +7,9 @@
 
 #include <lvgl/Dropdown.hpp>
 #include <lvgl/Label.hpp>
-#include <lvgl/TextArea.hpp>
+#include <lvgl/Event.hpp>
 #include <lvgl/Switch.hpp>
+#include <lvgl/TextArea.hpp>
 
 #include <json/Json.hpp>
 
@@ -24,19 +25,16 @@ protected:
   static void set_hint(lvgl::Label label, const char *value);
   static void set_hint_as_static(lvgl::Label label, const char *value);
 
-
-  static void set_error_message(lvgl::Object form_object, const char * message);
-  static void set_error_message_as_static(lvgl::Object form_object, const char * message);
+  static void set_error_message(lvgl::Object form_object, const char *message);
+  static void
+  set_error_message_as_static(lvgl::Object form_object, const char *message);
   static void hide_error_message(lvgl::Object form_object);
 
 public:
-  enum class IsValid {
-    no, yes
-  };
-
+  enum class IsValid { no, yes };
+  using SubmitCallback = IsValid (*)(Form form);
 
   LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Form);
-
 
   using SectionHeading = Heading2;
 
@@ -46,7 +44,7 @@ public:
     SectionHeadingSchema() : json::JsonValue(json::JsonObject()) {
       set_type(schema_type);
     }
-    SectionHeadingSchema(const json::JsonObject object)
+    explicit SectionHeadingSchema(const json::JsonObject object)
       : json::JsonValue(object) {}
 
     JSON_ACCESS_STRING(SectionHeadingSchema, name);
@@ -70,7 +68,7 @@ public:
 
     Switch &set_value(bool value = true) {
       auto s = get_switch();
-      if( value ) {
+      if (value) {
         s.add_state(lvgl::State::checked);
       } else {
         s.clear_state(lvgl::State::checked);
@@ -78,17 +76,15 @@ public:
       return *this;
     }
 
-    lvgl::Label get_label() const {
+    API_NO_DISCARD lvgl::Label get_label() const {
       return find<lvgl::Label>(Names::label);
     }
 
-
-    lvgl::Switch get_switch() const {
+    API_NO_DISCARD lvgl::Switch get_switch() const {
       return find<lvgl::Switch>(Names::switch_);
     }
 
-
-    var::StringView get_value() const {
+    API_NO_DISCARD var::StringView get_value() const {
       return get_switch().has_state(lvgl::State::checked) ? "true" : "false";
     }
 
@@ -128,16 +124,16 @@ public:
   public:
     LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(LineField);
 
-    LineField& set_error_message(const char * message){
+    LineField &set_error_message(const char *message) {
       Form::set_error_message(*this, message);
       return *this;
     }
-    LineField& set_error_message_as_static(const char * message){
+    LineField &set_error_message_as_static(const char *message) {
       Form::set_error_message_as_static(*this, message);
       return *this;
     }
 
-    LineField& hide_error_message(){
+    LineField &hide_error_message() {
       Form::hide_error_message(*this);
       return *this;
     }
@@ -209,20 +205,19 @@ public:
     explicit SelectFile(Data &data);
     explicit SelectFile(lv_obj_t *object) { m_object = object; }
 
-    SelectFile& set_error_message(const char * message){
+    SelectFile &set_error_message(const char *message) {
       Form::set_error_message(*this, message);
       return *this;
     }
-    SelectFile& set_error_message_as_static(const char * message){
+    SelectFile &set_error_message_as_static(const char *message) {
       Form::set_error_message_as_static(*this, message);
       return *this;
     }
 
-    SelectFile& hide_error_message(){
+    SelectFile &hide_error_message() {
       Form::hide_error_message(*this);
       return *this;
     }
-
 
     lvgl::Label get_label() const {
       return find<lvgl::Label>(Names::select_file_label);
@@ -293,7 +288,7 @@ public:
     static void handle_notified(lv_event_t *e);
     static void handle_text_focused(lv_event_t *e);
 
-    IsValid validate_value(Data * data);
+    IsValid validate_value(Data *data);
   };
 
   class Select : public lvgl::ObjectAccess<Select> {
@@ -305,16 +300,16 @@ public:
       return *this;
     }
 
-    Select& set_error_message(const char * message){
+    Select &set_error_message(const char *message) {
       Form::set_error_message(*this, message);
       return *this;
     }
-    Select& set_error_message_as_static(const char * message){
+    Select &set_error_message_as_static(const char *message) {
       Form::set_error_message_as_static(*this, message);
       return *this;
     }
 
-    Select& hide_error_message(){
+    Select &hide_error_message() {
       Form::hide_error_message(*this);
       return *this;
     }
@@ -363,6 +358,41 @@ public:
     };
   };
 
+  class SubmitButton : public lvgl::ObjectAccess<SubmitButton> {
+  public:
+    SubmitButton();
+    SubmitButton(lv_obj_t * object){ m_object = object; }
+
+    SubmitButton &set_label_as_static(const char *value) {
+      get_label().set_text_as_static(value);
+      return *this;
+    }
+
+    SubmitButton &set_label(const char *value) {
+      get_label().set_text(value);
+      return *this;
+    }
+
+    lvgl::Label get_label() const { return find<lvgl::Label>(Names::label); }
+
+    class Schema : public json::JsonValue {
+    public:
+      static constexpr auto schema_type = "submit";
+      Schema() : json::JsonValue(json::JsonObject()) { set_type(schema_type); }
+
+      Schema(const json::JsonObject object) : json::JsonValue(object) {}
+
+      JSON_ACCESS_STRING(Schema, type);
+      JSON_ACCESS_STRING(Schema, label);
+    };
+
+  private:
+    struct Names {
+      static constexpr auto label = "Label";
+      static constexpr auto hint_label = "SubmitButtonHint";
+    };
+  };
+
   class Schema : public json::JsonValue {
   public:
     static constexpr auto schema_type = "form";
@@ -387,20 +417,25 @@ public:
   Form(const char *name, Schema schema);
 
   json::JsonObject get_json_object() const;
-  Form& set_values(json::JsonObject object);
+  Form &set_values(json::JsonObject object);
 
   var::StringView get_value(lvgl::Object child) const;
-  Form& set_value(lvgl::Object child, const char * value);
+  Form &set_value(lvgl::Object child, const char *value);
 
   static constexpr auto not_a_value = "$$$notAFormValue";
 
-private:
+  static bool is_submit_button(lv_event_t *e) {
+    return lvgl::Event(e).target().name() == Names::submit_button;
+  }
 
+private:
   friend LineField;
   friend SelectFile;
+  friend SubmitButton;
 
   struct Names {
     DESIGN_DECLARE_NAME(error_badge);
+    DESIGN_DECLARE_NAME(submit_button);
   };
 
   template <class InputClass> InputClass check_type(lvgl::Object object) const {

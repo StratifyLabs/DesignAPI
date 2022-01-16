@@ -32,6 +32,7 @@ Form::Form(const char *name) {
                       .set_cross(FlexAlign::start)
                       .set_track_cross(FlexAlign::start))
     .fill_width()
+    .add_flag(Flags::event_bubble)
     .set_height(size_from_content)
     .add_style("form");
 }
@@ -171,6 +172,12 @@ Form::Form(const char *name, const Schema schema) {
       continue;
     }
 
+    if (type == LineField::Schema::schema_type) {
+      SubmitButton::Schema input_schema(input);
+      add(SubmitButton().set_label_as_static(input_schema.get_label_cstring()));
+      continue;
+    }
+
     if (type == Select::Schema::schema_type) {
       Select::Schema input_schema(input);
       const auto name = input_schema.get_name_cstring();
@@ -263,6 +270,13 @@ Form::Switch::Switch(const char *name) {
            .add_flag(Flags::hidden)
            .set_text_alignment(TextAlignment::left)
            .set_text_as_static(""));
+}
+
+Form::SubmitButton::SubmitButton() {
+  construct_button(Form::Names::submit_button);
+  add_style("form_submit_btn");
+  add(Label(Names::label).set_text_as_static("Submit").center());
+  add_flag(Flags::event_bubble);
 }
 
 Form::LineField::LineField(const char *name) {
@@ -440,23 +454,22 @@ Form::IsValid Form::SelectFile::validate_value(Data *data) {
   }
 
   const var::StringView suffix_filter = data->suffix_filter;
-  if( !suffix_filter.is_empty() ){
-    //make sure the suffix is in the list
+  if (!suffix_filter.is_empty()) {
+    // make sure the suffix is in the list
     const auto suffix_list = suffix_filter.split(",");
     bool is_suffix_ok = false;
     const auto value_suffix = fs::Path::suffix(full_path);
-    for(const auto & suffix: suffix_list){
-      if( value_suffix == suffix ){
+    for (const auto &suffix : suffix_list) {
+      if (value_suffix == suffix) {
         is_suffix_ok = true;
         break;
       }
     }
 
-    if( is_suffix_ok == false ){
+    if (is_suffix_ok == false) {
       set_error_message("File type is not allowed");
       return IsValid::no;
     }
-
   }
 
   hide_error_message();

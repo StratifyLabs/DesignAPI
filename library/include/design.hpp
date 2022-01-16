@@ -7,6 +7,7 @@ namespace design {}
 
 #include "design/Badge.hpp"
 #include "design/Card.hpp"
+#include "design/Drawer.hpp"
 #include "design/Grid.hpp"
 #include "design/HorizontalLine.hpp"
 #include "design/Modal.hpp"

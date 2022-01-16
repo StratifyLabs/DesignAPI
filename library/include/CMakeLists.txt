@@ -4,6 +4,7 @@ set(SOURCES
 	design/Alert.hpp
 	design/Badge.hpp
 	design/Card.hpp
+	design/Drawer.hpp
 	design/Typography.hpp
 	design/HorizontalLine.hpp
 	design/Modal.hpp
@@ -12,12 +13,13 @@ set(SOURCES
 	design/incbin.h
 	design/macros.hpp
 
-	design/extras/FileTextArea.hpp
-  design/extras/FileSystemCard.hpp
 	design/extras/CheckList.hpp
-	design/extras/FormList.hpp
+	design/extras/DrawerStack.hpp
+	design/extras/FileTextArea.hpp
 	design/extras/Form.hpp
+	design/extras/FormList.hpp
 	design/extras/Prompt.hpp
+  design/extras/FileSystemCard.hpp
 
 	design.hpp
 	PARENT_SCOPE

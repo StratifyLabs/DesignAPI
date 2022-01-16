@@ -17,13 +17,14 @@ public:
   Modal &set_enabled(bool value = true);
   Modal &close(chrono::MicroTime delay);
 
-  Modal &add_content(lv_obj_t * object);
+  Modal &add_content(lvgl::Object object);
 
 private:
   struct Names {
     static constexpr auto content_container = "ContentContainer";
   };
 };
+
 
 } // namespace design
 

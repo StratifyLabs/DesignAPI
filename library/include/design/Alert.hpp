@@ -15,6 +15,8 @@ public:
   explicit Alert(lv_obj_t *object) { m_object = object; }
   explicit Alert(Object &object) { m_object = object.object(); }
 
+  LVGL_OBJECT_ACCESS_GET_CLASS(obj_class)
+
 private:
 
 };
