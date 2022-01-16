@@ -1,5 +1,4 @@
 
-
 set(SOURCES
 	design/Alert.hpp
 	design/Badge.hpp
@@ -8,6 +7,7 @@ set(SOURCES
 	design/Typography.hpp
 	design/HorizontalLine.hpp
 	design/Modal.hpp
+	design/Toast.hpp
 	design/Worker.hpp
 
 	design/incbin.h
@@ -18,6 +18,7 @@ set(SOURCES
 	design/extras/FileTextArea.hpp
 	design/extras/Form.hpp
 	design/extras/FormList.hpp
+	design/extras/NotificationToast.hpp
 	design/extras/Prompt.hpp
   design/extras/FileSystemCard.hpp
 

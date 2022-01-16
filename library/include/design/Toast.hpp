@@ -3,18 +3,41 @@
 #ifndef DESIGNAPI_DESIGN_TOAST_HPP_
 #define DESIGNAPI_DESIGN_TOAST_HPP_
 
-#include <api/api.hpp>
-
 #include <lvgl/ObjectAccess.hpp>
-#include <lvgl/Screen.hpp>
+#include <chrono/MicroTime.hpp>
+
+#include "macros.hpp"
 
 namespace design {
 
 class Toast : public lvgl::ObjectAccess<Toast> {
 public:
-  Toast();
+
+  enum class Position {
+    top_left,
+    top,
+    top_right,
+    bottom_left,
+    bottom,
+    bottom_right,
+    left,
+    right
+  };
+
+  Toast(const char * name, chrono::MicroTime lifetime = 0_milliseconds);
+  Toast(chrono::MicroTime lifetime);
+  LVGL_OBJECT_ACCESS_CONSTRUCT_FROM_OBJECT(Toast);
+
+  Toast & set_position(Position direction);
 
 private:
+
+  struct Names {
+    DESIGN_DECLARE_NAME_VALUE(toast_name, __toast_default_name);
+  };
+
+  void construct_toast(const char * name, chrono::MicroTime lifetime);
+
 
 };
 

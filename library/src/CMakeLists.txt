@@ -7,6 +7,7 @@ set(SOURCES
 	Drawer.cpp
 	HorizontalLine.cpp
 	Modal.cpp
+	Toast.cpp
 	Worker.cpp
 
 	extras/CheckList.cpp
@@ -15,6 +16,7 @@ set(SOURCES
 	extras/FileTextArea.cpp
 	extras/FormList.cpp
 	extras/Form.cpp
+	extras/NotificationToast.cpp
 	extras/Prompt.cpp
 
 	Grid.cpp

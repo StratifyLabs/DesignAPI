@@ -24,6 +24,26 @@
 using namespace design;
 using namespace lvgl;
 
+Form Form::find_form_parent(lvgl::Object child_object) {
+  auto current = child_object.get_parent();
+  while (true) {
+    if (current.object() == nullptr) {
+      API_ASSERT(false);
+    } else {
+      if (
+        current.get_child_count()
+        && current.get_child(0).name() == Names::hidden_label) {
+        return current.get<Form>();
+      }
+    }
+    current = current.get_parent();
+  }
+}
+
+Form Form::find_form_child(lvgl::Object parent_object) {
+  return parent_object.find(Names::hidden_label).get_parent<Form>();
+}
+
 Form::Form(const char *name) {
   construct_object(name);
   add_style(Column::get_style())
@@ -34,7 +54,8 @@ Form::Form(const char *name) {
     .fill_width()
     .add_flag(Flags::event_bubble)
     .set_height(size_from_content)
-    .add_style("form");
+    .add_style("form")
+    .add(Label(Names::hidden_label).add_flag(Flags::hidden));
 }
 
 json::JsonObject Form::get_json_object() const {
@@ -178,6 +199,12 @@ Form::Form(const char *name, const Schema schema) {
       continue;
     }
 
+    if (type == LineField::Schema::schema_type) {
+      CancelButton::Schema input_schema(input);
+      add(CancelButton().set_label_as_static(input_schema.get_label_cstring()));
+      continue;
+    }
+
     if (type == Select::Schema::schema_type) {
       Select::Schema input_schema(input);
       const auto name = input_schema.get_name_cstring();
@@ -276,6 +303,13 @@ Form::SubmitButton::SubmitButton() {
   construct_button(Form::Names::submit_button);
   add_style("form_submit_btn");
   add(Label(Names::label).set_text_as_static("Submit").center());
+  add_flag(Flags::event_bubble);
+}
+
+Form::CancelButton::CancelButton() {
+  construct_button(Form::Names::submit_button);
+  add_style("form_cancel_btn");
+  add(Label(Names::label).set_text_as_static("Cancel").center());
   add_flag(Flags::event_bubble);
 }
 

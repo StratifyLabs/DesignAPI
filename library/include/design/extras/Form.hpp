@@ -388,8 +388,43 @@ public:
 
   private:
     struct Names {
-      static constexpr auto label = "Label";
+      DESIGN_DECLARE_NAME(label);
       static constexpr auto hint_label = "SubmitButtonHint";
+    };
+  };
+
+  class CancelButton : public lvgl::ObjectAccess<CancelButton> {
+  public:
+    CancelButton();
+    LVGL_OBJECT_ACCESS_CONSTRUCT_FROM_OBJECT(CancelButton);
+
+    CancelButton &set_label_as_static(const char *value) {
+      get_label().set_text_as_static(value);
+      return *this;
+    }
+
+    CancelButton &set_label(const char *value) {
+      get_label().set_text(value);
+      return *this;
+    }
+
+    lvgl::Label get_label() const { return find<lvgl::Label>(Names::label); }
+
+    class Schema : public json::JsonValue {
+    public:
+      static constexpr auto schema_type = "cancel";
+      Schema() : json::JsonValue(json::JsonObject()) { set_type(schema_type); }
+
+      Schema(const json::JsonObject object) : json::JsonValue(object) {}
+
+      JSON_ACCESS_STRING(Schema, type);
+      JSON_ACCESS_STRING(Schema, label);
+    };
+
+  private:
+    struct Names {
+      DESIGN_DECLARE_NAME(label);
+      static constexpr auto hint_label = "CancelButtonHint";
     };
   };
 
@@ -422,11 +457,18 @@ public:
   var::StringView get_value(lvgl::Object child) const;
   Form &set_value(lvgl::Object child, const char *value);
 
-  static constexpr auto not_a_value = "$$$notAFormValue";
+  static constexpr auto not_a_value = "__form_not_a_value";
 
   static bool is_submit_button(lv_event_t *e) {
     return lvgl::Event(e).target().name() == Names::submit_button;
   }
+
+  static bool is_cancel_button(lv_event_t *e) {
+    return lvgl::Event(e).target().name() == Names::cancel_button;
+  }
+
+  static Form find_form_parent(lvgl::Object child_object);
+  static Form find_form_child(lvgl::Object child_object);
 
 private:
   friend LineField;
@@ -435,7 +477,9 @@ private:
 
   struct Names {
     DESIGN_DECLARE_NAME(error_badge);
-    DESIGN_DECLARE_NAME(submit_button);
+    DESIGN_DECLARE_NAME_VALUE(submit_button, __form_submit_button);
+    DESIGN_DECLARE_NAME_VALUE(cancel_button, __form_cancel_button);
+    DESIGN_DECLARE_NAME_VALUE(hidden_label, __form_hidden_label);
   };
 
   template <class InputClass> InputClass check_type(lvgl::Object object) const {
