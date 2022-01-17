@@ -51,6 +51,7 @@ void Worker::move_worker(Worker &a) {
   std::swap(m_user_data, a.m_user_data);
   std::swap(m_user_task, a.m_user_task);
   std::swap(m_work_callback, a.m_work_callback);
+  std::swap(m_associated_object, a.m_associated_object);
 }
 
 void Worker::work_function() {

@@ -6,6 +6,7 @@
 #define RUSHROBOTS_DRAWER_HPP
 
 #include <lvgl/ObjectAccess.hpp>
+#include <lvgl/Event.hpp>
 
 namespace design {
 
@@ -44,6 +45,8 @@ public:
 
 private:
   Drawer & cycle();
+
+  Drawer & notify_content(lvgl::EventCode event_code);
 };
 
 } // namespace design

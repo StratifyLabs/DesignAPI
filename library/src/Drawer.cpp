@@ -2,6 +2,7 @@
 // Created by Tyler Gilbert on 1/15/22.
 //
 
+#include <lvgl/Event.hpp>
 #include <lvgl/Generic.hpp>
 
 #include "design/Drawer.hpp"
@@ -25,15 +26,18 @@ Drawer &Drawer::add_content(lvgl::Object object) {
 }
 
 Drawer &Drawer::open() {
-  return add_state(lvgl::State::user1).clear_state(lvgl::State::user2);
+  add_state(lvgl::State::user1).clear_state(lvgl::State::user2);
+  return notify_content(EventCode::entered);
 }
 
 Drawer &Drawer::open_partial() {
-  return clear_state(lvgl::State::user1).add_state(lvgl::State::user2);
+  clear_state(lvgl::State::user1).add_state(lvgl::State::user2);
+  return notify_content(EventCode::entered);
 }
 
 Drawer &Drawer::close() {
-  return clear_state(lvgl::State::user1).clear_state(lvgl::State::user2);
+  clear_state(lvgl::State::user1).clear_state(lvgl::State::user2);
+  return notify_content(EventCode::exited);
 }
 
 Drawer &Drawer::set_open_from_right() {
@@ -79,6 +83,14 @@ Drawer &Drawer::cycle() {
     close().open_partial();
   } else {
     open().close();
+  }
+  return *this;
+}
+
+Drawer &Drawer::notify_content(EventCode event_code) {
+  auto content = get_child(0);
+  if (content.is_valid()) {
+    Event::send(content, event_code);
   }
   return *this;
 }

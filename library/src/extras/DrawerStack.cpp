@@ -4,11 +4,13 @@
 
 #include "design/extras/DrawerStack.hpp"
 #include "design/Drawer.hpp"
-#include "design/Grid.hpp"
 
 using namespace design;
 
-DrawerStack::DrawerStack(Data &data) { construct_object(data.cast_as_name()); }
+DrawerStack::DrawerStack(Data &data) {
+  construct_object(data.cast_as_name());
+  set_scroll_direction(lvgl::Direction::vertical);
+}
 
 DrawerStack &DrawerStack::add_drawer(lvgl::Object object) {
   auto *data = user_data<Data>();
@@ -27,7 +29,8 @@ DrawerStack &DrawerStack::open_drawer(size_t index) {
   return open_drawer(target_drawer);
 }
 
-DrawerStack &DrawerStack::open_drawer_containing(const char *name_of_item_in_drawer) {
+DrawerStack &
+DrawerStack::open_drawer_containing(const char *name_of_item_in_drawer) {
   // current drawer is parent of object
   auto item_in_drawer = find(name_of_item_in_drawer);
   return open_drawer_containing(item_in_drawer);
@@ -38,6 +41,22 @@ DrawerStack &DrawerStack::open_drawer_containing(lvgl::Object object) {
   auto target_drawer = get_parent_drawer(object);
   return open_drawer(target_drawer);
 }
+
+DrawerStack &DrawerStack::open_drawer_containing(
+  const char *name_of_item_in_drawer,
+  void * context,
+  lvgl::Object (*add_if_not_available)(void*)) {
+  auto item_in_drawer
+    = find<lvgl::Object, lvgl::IsAssertOnFail::no>(name_of_item_in_drawer);
+  if (item_in_drawer.is_valid()) {
+    return open_drawer_containing(item_in_drawer);
+  }
+
+  // add the drawer then open it
+  auto object = add_if_not_available(context);
+  return add_drawer(object).open_drawer_containing(object);
+}
+
 
 DrawerStack &DrawerStack::open_drawer(Drawer target_drawer) {
   auto *data = user_data<Data>();
@@ -97,15 +116,14 @@ DrawerStack &DrawerStack::remove_drawer(size_t index) {
   return *this;
 }
 
-
-DrawerStack & DrawerStack::remove_drawer_containing(lvgl::Object object){
+DrawerStack &DrawerStack::remove_drawer_containing(lvgl::Object object) {
   get_parent_drawer(object).remove();
   return *this;
 }
 
 Drawer DrawerStack::find_drawer(const char *name) const {
   auto item = find<lvgl::Object, lvgl::IsAssertOnFail::no>(name);
-  if( item.is_valid() ){
+  if (item.is_valid()) {
     return get_parent_drawer(item);
   }
   return Drawer(nullptr);
