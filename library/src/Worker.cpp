@@ -37,6 +37,7 @@ void *Worker::thread_work_function(void *args) {
 }
 
 Worker &Worker::start(const thread::Thread::Attributes &thread_attributes) {
+  API_ASSERT(m_runtime != nullptr);
   if (!is_running()) {
     m_thread = thread::Thread(thread_attributes, this, thread_work_function);
   }
@@ -100,9 +101,16 @@ void Worker::notify_task(lv_obj_t * object) {
   Event::send(Generic(object), EventCode::notified);
 }
 
-
 bool Worker::is_running() const {
   return m_thread.is_valid() && m_thread.is_running();
 }
 
+lvgl::Runtime &Worker::runtime() {
+  API_ASSERT(m_runtime != nullptr);
+  return *m_runtime;
+}
 
+const lvgl::Runtime &Worker::runtime() const {
+  API_ASSERT(m_runtime != nullptr);
+  return *m_runtime;
+}
