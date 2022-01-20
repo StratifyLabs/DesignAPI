@@ -100,17 +100,9 @@ void Worker::notify_task(lv_obj_t * object) {
   Event::send(Generic(object), EventCode::notified);
 }
 
-Worker &Worker::notify(lv_obj_t *object) {
-  return push_task_to_runtime<lv_obj_t>(object, notify_task);
-}
 
 bool Worker::is_running() const {
   return m_thread.is_valid() && m_thread.is_running();
 }
 
-Worker &Worker::notify_associated_object() {
-  if( associated_object() ) {
-    return notify(associated_object());
-  }
-  return *this;
-}
+
