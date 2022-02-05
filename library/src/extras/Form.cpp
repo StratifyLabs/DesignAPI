@@ -73,7 +73,6 @@ json::JsonObject Form::get_json_object() const {
 }
 
 Form &Form::set_values(const json::JsonObject object) {
-  printer::Printer().object("setValues", object);
   for (const auto &child : *this) {
     const auto value = object.at(child.name());
     if (value.is_string()) {
