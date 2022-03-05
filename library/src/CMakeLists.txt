@@ -18,6 +18,7 @@ set(SOURCES
 	extras/Form.cpp
 	extras/NotificationToast.cpp
 	extras/Prompt.cpp
+	extras/Utility.cpp
 
 	Grid.cpp
 	Typography.cpp

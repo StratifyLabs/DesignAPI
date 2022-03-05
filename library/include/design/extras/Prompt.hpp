@@ -6,9 +6,10 @@
 #define DESIGNAPI_DESIGN_EXTRAS_PROMPT_HPP_
 
 #include <lvgl/Event.hpp>
-#include <lvgl/ObjectAccess.hpp>
+#include <lvgl/Label.hpp>
 
 #include "../macros.hpp"
+#include "../Grid.hpp"
 
 namespace design {
 
@@ -28,6 +29,10 @@ public:
 
   Prompt(Data &data);
   Prompt(lv_obj_t *object) { m_object = object; }
+
+  Column get_content_column() const;
+
+  lvgl::Label get_message_label() const;
 
 private:
   struct Names {

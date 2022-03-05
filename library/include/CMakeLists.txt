@@ -20,7 +20,8 @@ set(SOURCES
 	design/extras/FormList.hpp
 	design/extras/NotificationToast.hpp
 	design/extras/Prompt.hpp
-  design/extras/FileSystemCard.hpp
+	design/extras/Utility.hpp
+	design/extras/FileSystemCard.hpp
 
 	design.hpp
 	PARENT_SCOPE
