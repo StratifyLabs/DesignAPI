@@ -12,11 +12,12 @@ set(SOURCES
 
 	extras/CheckList.cpp
 	extras/DrawerStack.cpp
-  extras/FileSystemCard.cpp
 	extras/FileTextArea.cpp
-	extras/FormList.cpp
 	extras/Form.cpp
+	extras/FormList.cpp
+	extras/LoadingCircles.cpp
 	extras/NotificationToast.cpp
+  extras/FileSystemCard.cpp
 	extras/Prompt.cpp
 
 	Grid.cpp

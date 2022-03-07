@@ -18,6 +18,7 @@ set(SOURCES
 	design/extras/FileTextArea.hpp
 	design/extras/Form.hpp
 	design/extras/FormList.hpp
+	design/extras/LoadingCircles.hpp
 	design/extras/NotificationToast.hpp
 	design/extras/Prompt.hpp
   design/extras/FileSystemCard.hpp
