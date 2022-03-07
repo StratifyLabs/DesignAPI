@@ -10,24 +10,6 @@
 using namespace design;
 using namespace lvgl;
 
-
-ModelScope::ModelScope(ModelScope::Construct &options)
-  : thread::Mutex::Scope(options.mutex), m_construct(&options) {
-  options.pthread_scoped = thread::Thread::self();
-  ++options.lock_count;
-}
-
-ModelScope::~ModelScope() {
-  --m_construct->lock_count;
-  if (m_construct->lock_count == 0) {
-    m_construct->pthread_scoped = {};
-  }
-}
-
-bool ModelScope::Construct::is_available() const {
-  return pthread_scoped == thread::Thread::self();
-}
-
 Worker::Worker(lvgl::Runtime *runtime, Worker::Work work)
   : m_runtime(runtime), m_cond(m_mutex), m_work_callback(work) {}
 

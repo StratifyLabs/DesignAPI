@@ -11,6 +11,7 @@ namespace design {}
 #include "design/Grid.hpp"
 #include "design/HorizontalLine.hpp"
 #include "design/Modal.hpp"
+#include "design/ModelScope.hpp"
 #include "design/Toast.hpp"
 #include "design/Typography.hpp"
 #include "design/Worker.hpp"

@@ -7,6 +7,7 @@ set(SOURCES
 	design/Typography.hpp
 	design/HorizontalLine.hpp
 	design/Modal.hpp
+	design/ModelScope.hpp
 	design/Toast.hpp
 	design/Worker.hpp
 

@@ -2,8 +2,8 @@
 // Created by Tyler Gilbert on 12/16/21.
 //
 
-#ifndef DESIGNLAB_WORKER_HPP
-#define DESIGNLAB_WORKER_HPP
+#ifndef DESIGN_API_DESIGN_WORKER_HPP
+#define DESIGN_API_DESIGN_WORKER_HPP
 
 #include <algorithm>
 
@@ -15,25 +15,6 @@
 #include <thread/Thread.hpp>
 
 namespace design {
-
-class ModelScope : public thread::Mutex::Scope {
-
-public:
-  struct Construct {
-    thread::Mutex mutex = thread::Mutex(
-      thread::Mutex::Attributes().set_type(thread::Mutex::Type::recursive));
-    size_t lock_count = 0;
-    pthread_t pthread_scoped{};
-
-    bool is_available() const;
-  };
-
-  ModelScope(Construct &options);
-  ~ModelScope();
-
-private:
-  Construct *m_construct = nullptr;
-};
 
 class Worker : public api::ExecutionContext {
 public:
@@ -136,4 +117,4 @@ private:
 
 } // namespace design
 
-#endif // DESIGNLAB_WORKER_HPP
+#endif // DESIGN_API_DESIGN_WORKER_HPP

@@ -1,16 +1,34 @@
 //
-// Created by Tyler Gilbert on 3/7/22.
+// Created by Tyler Gilbert on 12/16/21.
 //
 
-#ifndef RUSHROBOTS_MODELSCOPE_HPP
-#define RUSHROBOTS_MODELSCOPE_HPP
+#ifndef DESIGN_API_DESIGN_MODEL_SCOPE_HPP
+#define DESIGN_API_DESIGN_MODEL_SCOPE_HPP
 
+#include <thread/Mutex.hpp>
+#include <thread/Thread.hpp>
 
+namespace design {
 
-class ModelScope {
+class ModelScope : public thread::Mutex::Scope {
 
+public:
+  struct Construct {
+    thread::Mutex mutex = thread::Mutex(
+      thread::Mutex::Attributes().set_type(thread::Mutex::Type::recursive));
+    size_t lock_count = 0;
+    pthread_t pthread_scoped{};
+
+    bool is_available() const;
+  };
+
+  ModelScope(Construct &options);
+  ~ModelScope();
+
+private:
+  Construct *m_construct = nullptr;
 };
 
+} // namespace design
 
-
-#endif //RUSHROBOTS_MODELSCOPE_HPP
+#endif // DESIGN_API_DESIGN_MODEL_SCOPE_HPP

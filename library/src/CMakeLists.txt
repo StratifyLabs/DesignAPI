@@ -7,6 +7,7 @@ set(SOURCES
 	Drawer.cpp
 	HorizontalLine.cpp
 	Modal.cpp
+	ModelScope.cpp
 	Toast.cpp
 	Worker.cpp
 
