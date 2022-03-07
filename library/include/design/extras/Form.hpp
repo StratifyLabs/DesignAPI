@@ -138,6 +138,11 @@ public:
       return *this;
     }
 
+    LineField &set_label(const char *value) {
+      get_label().set_text(value);
+      return *this;
+    }
+
     LineField &set_label_as_static(const char *value) {
       get_label().set_text_as_static(value);
       return *this;
@@ -294,6 +299,11 @@ public:
   class Select : public lvgl::ObjectAccess<Select> {
   public:
     LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Select);
+
+    Select &set_label(const char *value) {
+      get_label().set_text(value);
+      return *this;
+    }
 
     Select &set_label_as_static(const char *value) {
       get_label().set_text_as_static(value);

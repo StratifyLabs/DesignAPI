@@ -6,27 +6,33 @@
 #define DESIGNAPI_DESIGN_EXTRAS_PROMPT_HPP_
 
 #include <lvgl/Event.hpp>
-#include <lvgl/ObjectAccess.hpp>
+#include <lvgl/Label.hpp>
 
 #include "../macros.hpp"
+#include "../Grid.hpp"
 
 namespace design {
 
 class Prompt : public lvgl::ObjectAccess<Prompt> {
 public:
   struct Data : public lvgl::UserDataAccess<Data> {
-    API_PMAZ(accept,Data,const char *, LV_SYMBOL_OK);
-    API_PMAZ(accept_callback,Data,lvgl::Event::Callback,nullptr);
-    API_PMAZ(message,Data,const char *, "message");
-    API_PMAZ(name,Data,const char *, "");
-    API_PMAZ(reject,Data,const char *, LV_SYMBOL_CLOSE);
-    API_PMAZ(reject_callback,Data,lvgl::Event::Callback,nullptr);
-    API_PMAZ(title,Data,const char *, "title");
+    Data(const char *name = "") : lvgl::UserDataAccess<Data>(name) {}
+
+    API_PMAZ(accept, Data, const char *, LV_SYMBOL_OK);
+    API_PMAZ(accept_callback, Data, lvgl::Event::Callback, nullptr);
+    API_PMAZ(message, Data, const char *, "message");
+    API_PMAZ(name, Data, const char *, "");
+    API_PMAZ(reject, Data, const char *, LV_SYMBOL_CLOSE);
+    API_PMAZ(reject_callback, Data, lvgl::Event::Callback, nullptr);
+    API_PMAZ(title, Data, const char *, "title");
   };
 
-  Prompt(Data & data);
-  Prompt(lv_obj_t * object){ m_object = object; }
+  Prompt(Data &data);
+  Prompt(lv_obj_t *object) { m_object = object; }
 
+  Column get_content_column() const;
+
+  lvgl::Label get_message_label() const;
 
 private:
   struct Names {
@@ -39,8 +45,6 @@ private:
     DESIGN_DECLARE_NAME(reject_button);
     DESIGN_DECLARE_NAME(title_label);
   };
-
-
 };
 
 } // namespace design

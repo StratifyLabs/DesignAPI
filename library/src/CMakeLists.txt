@@ -19,6 +19,7 @@ set(SOURCES
 	extras/NotificationToast.cpp
   extras/FileSystemCard.cpp
 	extras/Prompt.cpp
+	extras/Utility.cpp
 
 	Grid.cpp
 	Typography.cpp

@@ -47,3 +47,11 @@ Prompt::Prompt(Data &data) {
         .add_event_callback(EventCode::clicked, data.reject_callback));
   }
 }
+
+lvgl::Label Prompt::get_message_label() const {
+  return find<lvgl::Label>(Names::message_label);
+}
+
+Column Prompt::get_content_column() const {
+  return find<Column>(Names::column);
+}

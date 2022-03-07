@@ -21,7 +21,8 @@ set(SOURCES
 	design/extras/LoadingCircles.hpp
 	design/extras/NotificationToast.hpp
 	design/extras/Prompt.hpp
-  design/extras/FileSystemCard.hpp
+	design/extras/Utility.hpp
+	design/extras/FileSystemCard.hpp
 
 	design.hpp
 	PARENT_SCOPE
