@@ -8,6 +8,8 @@
 
 #include <lvgl/Window.hpp>
 
+#include "../macros.hpp"
+
 namespace design {
 
 class FileSystemCard : public lvgl::ObjectAccess<FileSystemCard> {
@@ -25,6 +27,9 @@ public:
     API_PMAZ(base_path, Data, var::PathString, {});
     API_PMAZ(close_symbol, Data, const char *, LV_SYMBOL_CLOSE);
     API_PMAZ(directory_symbol, Data, const char *, LV_SYMBOL_DIRECTORY);
+#if defined __link
+    API_PMAZ(drop_symbol, Data, const char *, nullptr);
+#endif
     API_PMAZ(file_symbol, Data, const char *, LV_SYMBOL_FILE);
     API_PMAZ(full_path, Data, var::PathString, {});
 
@@ -68,6 +73,11 @@ private:
     static constexpr auto home_button = "HomeButton";
     static constexpr auto root_drive_button = "RootDriveButton";
     static constexpr auto select_button = "SelectButton";
+
+#if defined __link
+    DESIGN_DECLARE_NAME(drop_button);
+    DESIGN_DECLARE_NAME(drop_zone);
+#endif
   };
 
   FileSystemCard & update_path(var::StringView path);
@@ -75,13 +85,23 @@ private:
     return find<lvgl::Generic>(Names::content_area);
   }
 
+  FileSystemCard& update_back_button();
+
+  FileSystemCard & load_content();
+
+
   static void configure_details(lvgl::Generic container);
   static void configure_list(lvgl::Generic container);
   static void back_button_pressed(lv_event_t*e);
   static void select_button_pressed(lv_event_t*e);
   static void cancel_button_pressed(lv_event_t*e);
+#if defined __link
+  static void drop_file(lv_event_t*e);
+  static void drop_text(lv_event_t*e);
+  static void drop_button_pressed(lv_event_t*e);
+#endif
 
-  static FileSystemCard get_window(lvgl::Object child);
+  static FileSystemCard get_fs_card(lvgl::Object child);
 
   static fs::FileSystem::IsExclude is_exclude(const var::StringView name, void *data);
   static void item_clicked(lv_event_t*e);

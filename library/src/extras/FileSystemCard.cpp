@@ -15,6 +15,10 @@
 #include "design/Grid.hpp"
 #include "design/extras/FileSystemCard.hpp"
 
+#if defined __link
+#include "design/Modal.hpp"
+#endif
+
 #ifdef __win32
 #define ROOT_DRIVE "C:/"
 #else
@@ -71,6 +75,13 @@ bool FileSystemCard::Data::is_base_path() const {
   return relative_path.is_empty();
 }
 
+FileSystemCard &FileSystemCard::update_back_button() {
+  auto back_button = find<Button>(Names::back_button);
+  auto *data = user_data<Data>();
+  back_button.set_state(State::disabled, data->is_base_path());
+  return *this;
+}
+
 FileSystemCard::FileSystemCard(Data &data) {
   construct_object(data.cast_as_name());
   add_style("card");
@@ -84,6 +95,16 @@ FileSystemCard::FileSystemCard(Data &data) {
   add(Column(Names::top_column)
         .fill()
         .add(Row(Names::header_row).fill_width().add_style("card_header"))
+#if defined __link
+        .add(Button(Names::drop_zone)
+               .set_width(98_percent)
+               .set_height(20_percent)
+               .add_style("btn_success")
+               .add_label_as_static(data.drop_symbol)
+               .add_flag(Flags::hidden)
+               .add_event_callback(EventCode::drop_file, drop_file)
+               .add_event_callback(EventCode::drop_text, drop_text))
+#endif
         .add(Row(Names::content_area).fill_width().set_flex_grow()));
 
   {
@@ -100,7 +121,17 @@ FileSystemCard::FileSystemCard(Data &data) {
         .add_label_as_static(data.back_symbol)
         .add_event_callback(EventCode::clicked, back_button_pressed));
 
-    if( data.relative_path.is_empty() == false ){
+#if defined __link
+    if (data.drop_symbol != nullptr) {
+      header_row.add(
+        Button(Names::drop_button)
+          .add_style("btn_outline_primary")
+          .add_label_as_static(data.drop_symbol)
+          .add_event_callback(EventCode::clicked, drop_button_pressed));
+    }
+#endif
+
+    if (data.relative_path.is_empty() == false) {
       header_row.find<Button>(Names::back_button).clear_state(State::disabled);
     }
 
@@ -116,25 +147,30 @@ FileSystemCard::FileSystemCard(Data &data) {
         .add_event_callback(EventCode::clicked, cancel_button_pressed));
   }
 
-  {
-    auto content_row = find<Generic>(Names::content_area);
-    content_row.add_style("form_filesystem");
+  auto content_row = find<Generic>(Names::content_area);
+  content_row.add_style("form_filesystem");
 
-    if( fs::FileSystem().directory_exists(data.full_path) ){
-      configure_list(content_row);
-    } else if( fs::FileSystem().exists(data.full_path) ){
-      configure_details(content_row);
-    } else {
-      data.relative_path = "";
-      data.update_full_path();
-      configure_list(content_row);
-    }
+  load_content();
+}
 
+FileSystemCard &FileSystemCard::load_content() {
+  auto *data = user_data<Data>();
+  auto content_row = find<Generic>(Names::content_area);
+
+  if (fs::FileSystem().directory_exists(data->full_path)) {
+    configure_list(content_row);
+  } else if (fs::FileSystem().exists(data->full_path)) {
+    configure_details(content_row);
+  } else {
+    data->relative_path = "";
+    data->update_full_path();
+    configure_list(content_row);
   }
+  return *this;
 }
 
 void FileSystemCard::select_button_pressed(lv_event_t *e) {
-  auto window = get_window(Event(e).target());
+  auto window = get_fs_card(Event(e).target());
   auto *fs_data = window.user_data<Data>();
   fs_data->enter_directory(fs_data->selected_file);
   fs_data->notify_status = NotifyStatus::selected;
@@ -142,7 +178,7 @@ void FileSystemCard::select_button_pressed(lv_event_t *e) {
 }
 
 void FileSystemCard::cancel_button_pressed(lv_event_t *e) {
-  auto window = get_window(Event(e).target());
+  auto window = get_fs_card(Event(e).target());
   auto *fs_data = window.user_data<Data>();
   fs_data->notify_status = NotifyStatus::cancelled;
   Event::send(window, EventCode::notified);
@@ -151,16 +187,12 @@ void FileSystemCard::cancel_button_pressed(lv_event_t *e) {
 void FileSystemCard::back_button_pressed(lv_event_t *e) {
   const auto event = Event(e);
 
-  auto window = get_window(event.target());
+  auto window = get_fs_card(event.target());
   auto *fs_data = window.user_data<Data>();
   auto &path = fs_data->full_path;
 
-
   fs_data->exit_directory();
-  if( fs_data->is_base_path() ){
-    //disable the back button
-    window.find<Button>(Names::back_button).add_state(State::disabled);
-  }
+  window.update_back_button();
   window.update_path(fs_data->full_path);
   const auto info = fs::FileSystem().get_info(fs_data->full_path);
   if (info.is_directory()) {
@@ -168,17 +200,18 @@ void FileSystemCard::back_button_pressed(lv_event_t *e) {
   } else {
     configure_details(window.get_content());
   }
-
 }
 
 FileSystemCard &FileSystemCard::update_path(var::StringView path) {
-  auto &user_data_path = user_data<Data>()->full_path;
+  auto *fs_data = user_data<Data>();
+  auto &user_data_path = fs_data->full_path;
   user_data_path = path;
+
   find<Label>(Names::path_label).set_text_as_static(user_data_path);
   return *this;
 }
 
-FileSystemCard FileSystemCard::get_window(lvgl::Object child) {
+FileSystemCard FileSystemCard::get_fs_card(lvgl::Object child) {
   return child.find_parent<Generic>(Names::top_column)
     .get_parent()
     .get<FileSystemCard>();
@@ -189,7 +222,7 @@ void FileSystemCard::configure_details(Generic container) {
   container.clear_flag(Flags::scrollable)
     .clean()
     .add(Table(Names::file_details_table).setup([](Table table) {
-      auto *fs_data = get_window(table).user_data<Data>();
+      auto *fs_data = get_fs_card(table).user_data<Data>();
       const auto half_width = lv_coord_t(lvgl::screen().get_width() / 2);
       const auto info = fs::FileSystem().get_info(fs_data->full_path);
       const auto file_type = info.is_file() ? "File" : "Device";
@@ -232,7 +265,7 @@ void FileSystemCard::configure_details(Generic container) {
                                        .mix(background_color, MixRatio::x10);
               rect.set_background_color(mix_color)
                 //.set_background_opacity(Opacity::cover)
-              ;
+                ;
             }
           }
         });
@@ -243,7 +276,7 @@ void FileSystemCard::configure_list(Generic container) {
   // load the path
 
   container.add_flag(Flags::scrollable).clean().add(List().setup([](List list) {
-    auto *file_system_data = get_window(list).user_data<Data>();
+    auto *file_system_data = get_fs_card(list).user_data<Data>();
     API_ASSERT(file_system_data);
 
     // add items in the director to the list
@@ -344,7 +377,7 @@ void FileSystemCard::item_clicked(lv_event_t *e) {
   const auto *entry_name = list.get_button_text(event.target());
   auto button = event.target<Button>();
 
-  auto window = get_window(event.target());
+  auto window = get_fs_card(event.target());
   auto *fs_data = window.user_data<Data>();
 
   const auto is_checked = button.has_state(State::checked);
@@ -363,7 +396,7 @@ void FileSystemCard::item_clicked(lv_event_t *e) {
     const auto info = fs::FileSystem().get_info(fs_data->full_path);
 
     // clicked a directory or a file?
-    window.find<Button>(Names::back_button).clear_state(State::disabled);
+    window.update_back_button();
 
     if (info.is_directory()) {
       // configure this list with the content area
@@ -380,3 +413,43 @@ void FileSystemCard::item_clicked(lv_event_t *e) {
     }
   }
 }
+
+#if defined __link
+
+void FileSystemCard::drop_file(lv_event_t *e) {
+  auto *path = Event(e).parameter<var::PathString *>();
+  auto fs_card = get_fs_card(Event(e).target());
+  auto *fs_data = fs_card.user_data<Data>();
+  if (path->string_view().find(fs_data->base_path) == 0) {
+    auto relative_path
+      = path->string_view().pop_front(fs_data->base_path.length());
+    if (relative_path.length() && relative_path.front() == '/') {
+      relative_path.pop_front();
+    }
+    fs_data->relative_path = relative_path;
+    fs_data->update_full_path();
+    fs_card.update_path(path->string_view())
+      .load_content()
+      .update_back_button();
+
+    fs_card.find<Button>(Names::drop_zone).add_flag(Flags::hidden);
+
+  } else {
+    // this is an error
+    fs_card.find<Button>(Names::drop_button)
+      .get_child(0)
+      .get<Label>()
+      .set_text_as_static(LV_SYMBOL_CLOSE " Invalid path");
+  }
+
+  delete path;
+}
+
+void FileSystemCard::drop_text(lv_event_t *) {}
+void FileSystemCard::drop_button_pressed(lv_event_t *e) {
+  auto fs_card = get_fs_card(Event(e).target());
+  auto drop_zone = fs_card.find<Button>(Names::drop_zone);
+  drop_zone.toggle_flag(Flags::hidden);
+}
+
+#endif
