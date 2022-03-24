@@ -201,6 +201,8 @@ public:
       static constexpr auto field = "field";
       static constexpr auto hint_label = "LineFieldHint";
     };
+
+    static void handle_text_focused(lv_event_t * e);
   };
 
   class SelectFile : public lvgl::ObjectAccess<SelectFile> {
@@ -239,16 +241,16 @@ public:
     }
 
     var::StringView get_value() const {
-      return find<lvgl::TextArea>(Names::selected_path_label).get_text();
+      return find<lvgl::TextArea>(Names::selected_path_text_area).get_text();
     }
 
     SelectFile &set_value(const char *value) {
-      find<lvgl::TextArea>(Names::selected_path_label).set_text(value);
+      find<lvgl::TextArea>(Names::selected_path_text_area).set_text(value);
       return *this;
     }
 
     SelectFile &set_value_as_static(const char *value) {
-      find<lvgl::TextArea>(Names::selected_path_label)
+      find<lvgl::TextArea>(Names::selected_path_text_area)
         .set_text_as_static(value);
       return *this;
     }
@@ -283,7 +285,7 @@ public:
     struct Names {
       static constexpr auto hint_label = "SelectFileHint";
       DESIGN_DECLARE_NAME(select_file_label);
-      DESIGN_DECLARE_NAME(selected_path_label);
+      DESIGN_DECLARE_NAME(selected_path_text_area);
       DESIGN_DECLARE_NAME(select_file_modal);
       DESIGN_DECLARE_NAME(select_file_button);
       DESIGN_DECLARE_NAME(form_row);
@@ -362,8 +364,8 @@ public:
   private:
     friend Form;
     struct Names {
-      static constexpr auto label = "Label";
-      static constexpr auto dropdown = "Select";
+      DESIGN_DECLARE_NAME(label);
+      DESIGN_DECLARE_NAME(dropdown);
       static constexpr auto hint_label = "SelectHint";
     };
   };
@@ -480,10 +482,25 @@ public:
   static Form find_form_parent(lvgl::Object child_object);
   static Form find_form_child(lvgl::Object child_object);
 
+  enum class IsSoftKeyboard {
+    no, yes
+  };
+
+  using LaunchKeyboardCallback = void (*)(const char * name, lv_obj_t * target);
+
+  static IsSoftKeyboard launch_keyboard(const char * name, lv_obj_t * target);
+
+  static void set_launch_keyboard_callback(LaunchKeyboardCallback value){
+    m_launch_keyboard_callback = value;
+  }
+
 private:
   friend LineField;
   friend SelectFile;
   friend SubmitButton;
+
+
+  static LaunchKeyboardCallback m_launch_keyboard_callback;
 
   struct Names {
     DESIGN_DECLARE_NAME(error_badge);

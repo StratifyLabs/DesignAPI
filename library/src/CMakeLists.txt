@@ -12,6 +12,8 @@ set(SOURCES
 	Worker.cpp
 
 	extras/CheckList.cpp
+	extras/KeyboardInput.cpp
+  extras/FileSystemCard.cpp
 	extras/DrawerStack.cpp
 	extras/FileTextArea.cpp
 	extras/Form.cpp
@@ -21,6 +23,7 @@ set(SOURCES
   extras/FileSystemCard.cpp
 	extras/Prompt.cpp
 	extras/Utility.cpp
+
 
 	Grid.cpp
 	Typography.cpp

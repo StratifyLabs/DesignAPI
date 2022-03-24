@@ -21,6 +21,7 @@ set(SOURCES
 	design/extras/FormList.hpp
 	design/extras/LoadingCircles.hpp
 	design/extras/NotificationToast.hpp
+	design/extras/KeyboardInput.hpp
 	design/extras/Prompt.hpp
 	design/extras/Utility.hpp
 	design/extras/FileSystemCard.hpp

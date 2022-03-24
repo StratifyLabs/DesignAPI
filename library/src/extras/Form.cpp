@@ -44,6 +44,16 @@ Form Form::find_form_child(lvgl::Object parent_object) {
   return parent_object.find(Names::hidden_label).get_parent<Form>();
 }
 
+Form::LaunchKeyboardCallback Form::m_launch_keyboard_callback = nullptr;
+
+Form::IsSoftKeyboard Form::launch_keyboard(const char *name, lv_obj_t *target) {
+  if (m_launch_keyboard_callback) {
+    m_launch_keyboard_callback(name, target);
+    return IsSoftKeyboard::yes;
+  }
+  return IsSoftKeyboard::no;
+}
+
 Form::Form(const char *name) {
   construct_object(name);
   add_style(Column::get_style())
@@ -164,8 +174,7 @@ Form::Schema::Schema(var::StringView file_path, IsOverwrite is_overwrite)
 Form::Schema::~Schema() {
   if (bool(m_is_overwrite) && !m_path.is_empty()) {
     json::JsonDocument().save(
-      is_valid() ? to_object() : json::JsonObject(),
-      fs::File(m_is_overwrite, m_path));
+      is_valid() ? to_object() : json::JsonObject(), fs::File(m_is_overwrite, m_path));
   }
 }
 
@@ -212,8 +221,7 @@ Form::Form(const char *name, const Schema schema) {
             .set_hint_as_static(input_schema.get_hint_cstring()));
 
       auto select = find<Select>(name);
-      select.get_dropdown().set_options_as_static(
-        input_schema.get_options_cstring());
+      select.get_dropdown().set_options_as_static(input_schema.get_options_cstring());
 
       const auto option_list = input_schema.get_options().split("\n");
       const auto current_value = input_schema.get_value();
@@ -280,8 +288,10 @@ void Form::set_hint_as_static(lvgl::Label label, const char *value) {
 
 Form::Switch::Switch(const char *name) {
   construct_object(name);
+
   add_style(Column::get_style())
     .add_style("form_col")
+    .fill_width()
     .set_height(size_from_content)
     .add(Row()
            .add_style("form_row")
@@ -316,6 +326,7 @@ Form::LineField::LineField(const char *name) {
   construct_object(name);
   add_style(Column::get_style())
     .add_style("form_col")
+    .fill_width()
     .set_height(size_from_content)
     .add(Row()
            .fill_width()
@@ -336,6 +347,7 @@ Form::LineField::LineField(const char *name) {
                   .add_style("form_field")
                   .set_flex_grow()
                   .set_one_line_mode()
+                  .add_event_callback(EventCode::focused, handle_text_focused)
                   .add_to_default_group())
            .add(Button()
                   .add_label_as_static(LV_SYMBOL_CLOSE)
@@ -357,11 +369,18 @@ Form::LineField::LineField(const char *name) {
            .set_text_as_static(""));
 }
 
+void Form::LineField::handle_text_focused(lv_event_t *e) {
+  auto target = Event(e).target();
+  // pass the name of the line field
+  launch_keyboard(target.get_parent().get_parent().name(), target.object());
+}
+
 Form::SelectFile::SelectFile(Data &data) {
   construct_object(data.cast_as_name());
   // FS user data points to the SelectFile Object
   data.set_user_data(m_object);
 
+  fill_width();
   add_style(Column::get_style())
     .add_style("form_col")
     .set_height(size_from_content)
@@ -379,7 +398,7 @@ Form::SelectFile::SelectFile(Data &data) {
                   .add_flag(Flags::hidden)))
     .add(Row(Names::form_row)
            .add_style("form_row")
-           .add(TextArea(Names::selected_path_label)
+           .add(TextArea(Names::selected_path_text_area)
                   .add_style("form_field")
                   .set_flex_grow()
                   .set_text_as_static("")
@@ -398,14 +417,20 @@ Form::SelectFile::SelectFile(Data &data) {
 
 void Form::SelectFile::handle_text_focused(lv_event_t *e) {
   // change the button to an OK check box
-  auto label = Event(e)
-                 .target()
-                 .get_parent()
-                 .find<Button>(Names::select_file_button)
-                 .get_child(0)
-                 .get<Label>();
+  auto event_target_parent = Event(e).target().get_parent();
+  auto label =
+    event_target_parent.find<Button>(Names::select_file_button).get_child(0).get<Label>();
 
-  label.set_text_as_static(LV_SYMBOL_OK);
+  auto text_area = event_target_parent.find<TextArea>(Names::selected_path_text_area);
+
+  // is there a function available to launch a keyboard
+  if (
+    launch_keyboard(event_target_parent.get_parent().name(), text_area.object())
+    == IsSoftKeyboard::no) {
+
+    // if no keyboard, then change the symbol to allow direct editing of the text area
+    label.set_text_as_static(LV_SYMBOL_OK);
+  }
 }
 
 void Form::SelectFile::handle_clicked(lv_event_t *e) {
@@ -423,9 +448,8 @@ void Form::SelectFile::handle_clicked(lv_event_t *e) {
     return;
   }
 
-  auto *new_data = file_system_data->needs_free()
-                     ? &FileSystemCard::Data::create()
-                     : file_system_data;
+  auto *new_data =
+    file_system_data->needs_free() ? &FileSystemCard::Data::create() : file_system_data;
 
   if (new_data != file_system_data) {
     // if new data was created -- copy it
@@ -437,8 +461,7 @@ void Form::SelectFile::handle_clicked(lv_event_t *e) {
     .add(FileSystemCard(*new_data)
            .add_style("modal_content")
            .add_style("modal_content_enabled", Modal::enabled)
-           .set_width(80_percent)
-           .set_height(80_percent)
+           .add_style("form_select_file_modal")
            .set_alignment(Alignment::top_middle)
            .add_state(Modal::enabled)
            .set_opacity(Opacity::transparent)
@@ -448,14 +471,11 @@ void Form::SelectFile::handle_clicked(lv_event_t *e) {
 void Form::SelectFile::handle_notified(lv_event_t *e) {
   auto self = Event(e).target();
   auto *fs_data = self.user_data<Data>();
-  auto select_file
-    = SelectFile(reinterpret_cast<lv_obj_t *>(fs_data->user_data));
+  auto select_file = SelectFile(reinterpret_cast<lv_obj_t *>(fs_data->user_data));
 
   if (fs_data->notify_status == FileSystemCard::NotifyStatus::selected) {
-    select_file.find<TextArea>(Names::selected_path_label)
-      .set_text(
-        fs_data->is_absolute_path ? fs_data->full_path
-                                  : fs_data->relative_path);
+    select_file.find<TextArea>(Names::selected_path_text_area)
+      .set_text(fs_data->is_absolute_path ? fs_data->full_path : fs_data->relative_path);
   }
 
   auto modal = Event(e).find_parent<Modal>(Names::select_file_modal);
@@ -466,8 +486,8 @@ void Form::SelectFile::handle_notified(lv_event_t *e) {
 }
 
 Form::IsValid Form::SelectFile::validate_value(Data *data) {
-  const auto full_path = data->is_absolute_path ? var::PathString(get_value())
-                                                : data->base_path / get_value();
+  const auto full_path =
+    data->is_absolute_path ? var::PathString(get_value()) : data->base_path / get_value();
   if (!fs::FileSystem().exists(full_path)) {
     // set the error
     set_error_message("path does not exist");
@@ -510,14 +530,10 @@ Form::IsValid Form::SelectFile::validate_value(Data *data) {
 }
 
 void Form::set_error_message(Object form_object, const char *message) {
-  form_object.find<Badge>(Names::error_badge)
-    .clear_flag(Flags::hidden)
-    .set_text(message);
+  form_object.find<Badge>(Names::error_badge).clear_flag(Flags::hidden).set_text(message);
 }
 
-void Form::set_error_message_as_static(
-  Object form_object,
-  const char *message) {
+void Form::set_error_message_as_static(Object form_object, const char *message) {
   form_object.find<Badge>(Names::error_badge)
     .clear_flag(Flags::hidden)
     .set_text_as_static(message);
@@ -531,6 +547,7 @@ Form::Select::Select(const char *name) {
   construct_object(name);
   add_style(Column::get_style())
     .add_style("form_col")
+    .fill_width()
     .set_height(size_from_content)
     .add(Row()
            .fill_width()
@@ -538,6 +555,7 @@ Form::Select::Select(const char *name) {
            .add(Label(Names::label)
                   .add_style("form_label")
                   .fill_width()
+                  .set_flex_grow()
                   .set_text_alignment(TextAlignment::left)
                   .set_text_as_static(""))
            .add(Badge(Form::Names::error_badge)
