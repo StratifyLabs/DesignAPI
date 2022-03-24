@@ -761,7 +761,7 @@ Utility::get_property_value(json::JsonValue value, lvgl::PropertyType type) {
       return Percent(value.to_integer()).value();
     }
 
-    return value.to_integer();
+    return lvgl::PropertyValue(s32(value.to_integer()));
   }
 
   case PropertyType::color:
@@ -797,7 +797,7 @@ Utility::get_property_value(json::JsonValue value, lvgl::PropertyType type) {
   case PropertyType::image_source:
     break;
   }
-  return 0;
+  return lvgl::PropertyValue(s32(0));
 }
 
 const char *
