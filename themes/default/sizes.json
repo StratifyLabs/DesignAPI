@@ -1,0 +1,90 @@
+{
+  "name": "small",
+  "type": "sizes",
+  "$variables": {
+
+    "$sizePaddingWidth": 10,
+    "$sizePaddingHeight": 10,
+    "$sizeGrowWidth": 4,
+    "$sizeGrowHeight": 4,
+    "$sizeShrinkWidth": "-4",
+    "$sizeShrinkHeight": "-4",
+    "$sizeOutlineWidth": 4,
+    "$sizeLineWidth": 1,
+    "$sizeBorderWidth": 4,
+    "$sizeBorderRadius": 8,
+    "$sizeHorizontalLineHeight": 2,
+
+    "$sizeColorWheelArcWidth": 20,
+    "$sizeProgressBarHeight": 20,
+    "$sizeProgressBarRadius": "$sizeBorderRadius",
+
+    "$sizeFormSwitchHeight": 64,
+    "$sizeFormSwitchWidth": 128,
+    "$sizeFormSwitchBorderWidth": "$sizeBorderWidth",
+    "$sizeFormSwitchBorderRadius": "LV_RADIUS_CIRCLE",
+
+    "$sizePaddingTinyWidth": "$sizePaddingWidth / 3",
+    "$sizePaddingTinyHeight": "$sizePaddingHeight / 3",
+    "$sizePaddingSmallWidth": "$sizePaddingWidth / 2",
+    "$sizePaddingSmallHeight": "$sizePaddingHeight / 2",
+    "$sizePaddingMediumWidth": "$sizePaddingWidth",
+    "$sizePaddingMediumHeight": "$sizePaddingHeight",
+    "$sizePaddingLargeWidth": "$sizePaddingWidth *2",
+    "$sizePaddingLargeHeight": "$sizePaddingHeight *2",
+
+    "$sizeScrollbarWidth": 12,
+    "$sizeScrollbarHeight": 12,
+    "$sizeScrollbarPaddingWidth": 4,
+    "$sizeScrollbarPaddingHeight": 4,
+
+    "$sizeArcWidth": 15,
+    "$sizeDropdownMaxHeight": 500,
+
+    "$sizeModalTranslateHeight": 50,
+
+    "$sizeCardBorderRadius": "$sizeBorderRadius *2",
+    "$sizeCardBorderWidth": "$sizeBorderWidth",
+    "$sizeCardPaddingWidth": "$sizePaddingWidth",
+    "$sizeCardPaddingHeight": "$sizePaddingHeight",
+
+    "$sizeToastPercentage": "LV_PCT(25)",
+    "$sizeToastOffsetWidth": 40,
+    "$sizeToastOffsetHeight": 40,
+
+    "$sizeTableCellBorderWidth": "$sizeBorderWidth",
+
+    "$sizeCheckboxBorderWidth": "$sizeBorderWidth",
+    "$sizeCheckboxRadius": "$sizeBorderRadius",
+
+    "$sizeButtonPaddingWidth": "$sizePaddingWidth *2",
+    "$sizeButtonPaddingHeight": "$sizePaddingHeight *2",
+    "$sizeButtonBorderWidth": "$sizeBorderWidth",
+    "$sizeButtonBorderRadius": "$sizeBorderRadius",
+
+    "$sizeBadgePaddingWidth": "$sizePaddingWidth *2",
+    "$sizeBadgePaddingHeight": "$sizePaddingSmallHeight *2",
+    "$sizeBadgeBorderWidth": 0,
+    "$sizeBadgeBorderRadius": "$sizeBorderRadius",
+
+
+    "$sizeButtonPaddingSmallWidth": "$sizeButtonPaddingWidth /2",
+    "$sizeButtonPaddingMediumWidth": "$sizeButtonPaddingWidth",
+    "$sizeButtonPaddingLargeWidth": "$sizeButtonPaddingWidth *2",
+    "$sizeButtonPaddingSmallHeight": "$sizeButtonPaddingHeight /2",
+    "$sizeButtonPaddingMediumHeight": "$sizeButtonPaddingHeight",
+    "$sizeButtonPaddingLargeHeight": "$sizeButtonPaddingHeight *3/2",
+
+    "$sizeBadgePaddingSmallWidth": "$sizeBadgePaddingWidth /2",
+    "$sizeBadgePaddingMediumWidth": "$sizeBadgePaddingWidth",
+    "$sizeBadgePaddingLargeWidth": "$sizeBadgePaddingWidth *2",
+    "$sizeBadgePaddingSmallHeight": "$sizeBadgePaddingHeight /2",
+    "$sizeBadgePaddingMediumHeight": "$sizeBadgePaddingHeight",
+    "$sizeBadgePaddingLargeHeight": "$sizeBadgePaddingHeight *3/2",
+
+    "$sizeFormLabelPaddingWidth": "$sizePaddingWidth",
+    "$sizeFormLabelPaddingHeight": "$sizePaddingHeight",
+    "$sizeFormFieldBorderWidth": "$sizeBorderWidth /2",
+    "$sizeFormFieldBorderHeight": "$sizeBorderWidth /2"
+  }
+}
