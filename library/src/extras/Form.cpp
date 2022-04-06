@@ -31,8 +31,7 @@ Form Form::find_form_parent(lvgl::Object child_object) {
       API_ASSERT(false);
     } else {
       if (
-        current.get_child_count()
-        && current.get_child(0).name() == Names::hidden_label) {
+        current.get_child_count() && current.get_child(0).name() == Names::hidden_label) {
         return current.get<Form>();
       }
     }
@@ -458,14 +457,9 @@ void Form::SelectFile::handle_clicked(lv_event_t *e) {
 
   // create the modal
   Modal(Names::select_file_modal)
-    .add(FileSystemCard(*new_data)
-           .add_style("modal_content")
-           .add_style("modal_content_enabled", Modal::enabled)
-           .add_style("form_select_file_modal")
-           .set_alignment(Alignment::top_middle)
-           .add_state(Modal::enabled)
-           .set_opacity(Opacity::transparent)
-           .add_event_callback(EventCode::notified, handle_notified));
+    .add_content(FileSystemCard(*new_data)
+                   .add_style("form_select_file_modal")
+                   .add_event_callback(EventCode::notified, handle_notified));
 }
 
 void Form::SelectFile::handle_notified(lv_event_t *e) {
