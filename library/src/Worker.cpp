@@ -5,6 +5,10 @@
 #include <lvgl/Generic.hpp>
 #include <lvgl/Event.hpp>
 
+#if !defined LVGL_RUNTIME_TASK_ARRAY_SIZE
+#error "DesignAPI requires LVGL_RUNTIME_TASK_ARRAY_SIZE to be defined in lv_conf.h"
+#endif
+
 #include "design/Worker.hpp"
 
 using namespace design;
