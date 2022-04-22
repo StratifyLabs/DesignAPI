@@ -6,8 +6,9 @@
 #define DESIGNAPI_DESIGN_EXTRAS_FORM_HPP_
 
 #include <lvgl/Dropdown.hpp>
-#include <lvgl/Label.hpp>
 #include <lvgl/Event.hpp>
+#include <lvgl/Keyboard.hpp>
+#include <lvgl/Label.hpp>
 #include <lvgl/Switch.hpp>
 #include <lvgl/TextArea.hpp>
 
@@ -26,8 +27,7 @@ protected:
   static void set_hint_as_static(lvgl::Label label, const char *value);
 
   static void set_error_message(lvgl::Object form_object, const char *message);
-  static void
-  set_error_message_as_static(lvgl::Object form_object, const char *message);
+  static void set_error_message_as_static(lvgl::Object form_object, const char *message);
   static void hide_error_message(lvgl::Object form_object);
 
 public:
@@ -165,9 +165,7 @@ public:
 
     lvgl::Label get_label() const { return find<lvgl::Label>(Names::label); }
 
-    lvgl::TextArea get_text_area() const {
-      return find<lvgl::TextArea>(Names::field);
-    }
+    lvgl::TextArea get_text_area() const { return find<lvgl::TextArea>(Names::field); }
 
     var::StringView get_value() const { return get_text_area().get_text(); }
 
@@ -179,6 +177,17 @@ public:
     LineField &set_hint(const char *value) {
       Form::set_hint(find<lvgl::Label>(Names::hint_label), value);
       return *this;
+    }
+
+    LineField &set_keyboard_mode(lvgl::Keyboard::Mode mode) {
+      find<lvgl::Label>(Names::keyboard_mode_label)
+        .set_text_as_static(lvgl::Keyboard::to_cstring(mode));
+      return *this;
+    }
+
+    lvgl::Keyboard::Mode get_keyboard_mode() const {
+      const auto label = find<lvgl::Label>(Names::keyboard_mode_label).get_text();
+      return lvgl::Keyboard::get_mode(label);
     }
 
     class Schema : public json::JsonValue {
@@ -200,9 +209,10 @@ public:
       static constexpr auto label = "label";
       static constexpr auto field = "field";
       static constexpr auto hint_label = "LineFieldHint";
+      static constexpr auto keyboard_mode_label = "LineFieldKeyboardMode";
     };
 
-    static void handle_text_focused(lv_event_t * e);
+    static void handle_text_focused(lv_event_t *e);
   };
 
   class SelectFile : public lvgl::ObjectAccess<SelectFile> {
@@ -226,9 +236,7 @@ public:
       return *this;
     }
 
-    lvgl::Label get_label() const {
-      return find<lvgl::Label>(Names::select_file_label);
-    }
+    lvgl::Label get_label() const { return find<lvgl::Label>(Names::select_file_label); }
 
     SelectFile &set_label_as_static(const char *value) {
       get_label().set_text_as_static(value);
@@ -250,8 +258,7 @@ public:
     }
 
     SelectFile &set_value_as_static(const char *value) {
-      find<lvgl::TextArea>(Names::selected_path_text_area)
-        .set_text_as_static(value);
+      find<lvgl::TextArea>(Names::selected_path_text_area).set_text_as_static(value);
       return *this;
     }
 
@@ -330,9 +337,7 @@ public:
 
     lvgl::Label get_label() const { return find<lvgl::Label>(Names::label); }
 
-    lvgl::Dropdown get_dropdown() const {
-      return find<lvgl::Dropdown>(Names::dropdown);
-    }
+    lvgl::Dropdown get_dropdown() const { return find<lvgl::Dropdown>(Names::dropdown); }
 
     Select &set_hint_as_static(const char *value) {
       Form::set_hint_as_static(find<lvgl::Label>(Names::hint_label), value);
@@ -373,7 +378,7 @@ public:
   class SubmitButton : public lvgl::ObjectAccess<SubmitButton> {
   public:
     SubmitButton();
-    SubmitButton(lv_obj_t * object){ m_object = object; }
+    SubmitButton(lv_obj_t *object) { m_object = object; }
 
     SubmitButton &set_label_as_static(const char *value) {
       get_label().set_text_as_static(value);
@@ -447,9 +452,7 @@ public:
 
     using IsOverwrite = fs::FileObject::IsOverwrite;
 
-    Schema(
-      var::StringView file_path,
-      IsOverwrite is_overwrite = IsOverwrite::no);
+    Schema(var::StringView file_path, IsOverwrite is_overwrite = IsOverwrite::no);
     ~Schema();
 
     JSON_ACCESS_STRING(Schema, type);
@@ -480,17 +483,15 @@ public:
   }
 
   static Form find_form_parent(lvgl::Object child_object);
-  static Form find_form_child(lvgl::Object child_object);
+  static Form find_form_child(lvgl::Object parent_object);
 
-  enum class IsSoftKeyboard {
-    no, yes
-  };
+  enum class IsSoftKeyboard { no, yes };
 
-  using LaunchKeyboardCallback = void (*)(const char * name, lv_obj_t * target);
+  using LaunchKeyboardCallback = void (*)(const char *name, lvgl::TextArea text_area, lvgl::Keyboard::Mode mode);
 
-  static IsSoftKeyboard launch_keyboard(const char * name, lv_obj_t * target);
+  static IsSoftKeyboard launch_keyboard(const char *name, lvgl::TextArea text_area, lvgl::Keyboard::Mode mode);
 
-  static void set_launch_keyboard_callback(LaunchKeyboardCallback value){
+  static void set_launch_keyboard_callback(LaunchKeyboardCallback value) {
     m_launch_keyboard_callback = value;
   }
 
@@ -498,7 +499,6 @@ private:
   friend LineField;
   friend SelectFile;
   friend SubmitButton;
-
 
   static LaunchKeyboardCallback m_launch_keyboard_callback;
 
@@ -510,9 +510,7 @@ private:
   };
 
   template <class InputClass> InputClass check_type(lvgl::Object object) const {
-    if (object
-          .find<InputClass, lvgl::IsAssertOnFail::no>(
-            InputClass::Names::hint_label)
+    if (object.find<InputClass, lvgl::IsAssertOnFail::no>(InputClass::Names::hint_label)
           .is_valid()) {
       return object.get<InputClass>();
     }

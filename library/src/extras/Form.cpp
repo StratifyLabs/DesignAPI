@@ -45,9 +45,12 @@ Form Form::find_form_child(lvgl::Object parent_object) {
 
 Form::LaunchKeyboardCallback Form::m_launch_keyboard_callback = nullptr;
 
-Form::IsSoftKeyboard Form::launch_keyboard(const char *name, lv_obj_t *target) {
+Form::IsSoftKeyboard Form::launch_keyboard(
+  const char *name,
+  lvgl::TextArea text_area,
+  lvgl::Keyboard::Mode mode) {
   if (m_launch_keyboard_callback) {
-    m_launch_keyboard_callback(name, target);
+    m_launch_keyboard_callback(name, text_area, mode);
     return IsSoftKeyboard::yes;
   }
   return IsSoftKeyboard::no;
@@ -360,6 +363,9 @@ Form::LineField::LineField(const char *name) {
                         .find<TextArea>(Names::field)
                         .set_text_as_static("");
                     })))
+    .add(Label(Names::keyboard_mode_label)
+           .clear_flag(Flags::hidden)
+           .set_text_as_static(Keyboard::to_cstring(Keyboard::Mode::text_lower)))
     .add(Label(Names::hint_label)
            .add_style("form_hint")
            .fill_width()
@@ -369,9 +375,10 @@ Form::LineField::LineField(const char *name) {
 }
 
 void Form::LineField::handle_text_focused(lv_event_t *e) {
-  auto target = Event(e).target();
+  auto target_text_area = Event(e).target<TextArea>();
   // pass the name of the line field
-  launch_keyboard(target.get_parent().get_parent().name(), target.object());
+  auto line_field = target_text_area.get_parent().get_parent<LineField>();
+  launch_keyboard(line_field.name(), target_text_area, line_field.get_keyboard_mode());
 }
 
 Form::SelectFile::SelectFile(Data &data) {
@@ -423,9 +430,9 @@ void Form::SelectFile::handle_text_focused(lv_event_t *e) {
   auto text_area = event_target_parent.find<TextArea>(Names::selected_path_text_area);
 
   // is there a function available to launch a keyboard
-  if (
-    launch_keyboard(event_target_parent.get_parent().name(), text_area.object())
-    == IsSoftKeyboard::no) {
+  if (const auto parent_name = event_target_parent.get_parent().name();
+      launch_keyboard(parent_name, text_area, Keyboard::Mode::text_lower)
+      == IsSoftKeyboard::no) {
 
     // if no keyboard, then change the symbol to allow direct editing of the text area
     label.set_text_as_static(LV_SYMBOL_OK);
