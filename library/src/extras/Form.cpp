@@ -365,6 +365,8 @@ Form::LineField::LineField(const char *name) {
                     })))
     .add(Label(Names::keyboard_mode_label)
            .clear_flag(Flags::hidden)
+           .set_padding(0)
+           .set_height(0)
            .set_text_as_static(Keyboard::to_cstring(Keyboard::Mode::text_lower)))
     .add(Label(Names::hint_label)
            .add_style("form_hint")
