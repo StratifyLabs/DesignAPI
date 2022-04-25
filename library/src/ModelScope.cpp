@@ -7,15 +7,15 @@
 using namespace design;
 
 ModelScope::ModelScope(ModelScope::Construct &options)
-  : thread::Mutex::Scope(options.mutex), m_construct(&options) {
+  : thread::Mutex::Scope(options.mutex), m_pointer(&options, &deleter) {
   options.pthread_scoped = thread::Thread::self();
   ++options.lock_count;
 }
 
-ModelScope::~ModelScope() {
-  --m_construct->lock_count;
-  if (m_construct->lock_count == 0) {
-    m_construct->pthread_scoped = {};
+void ModelScope::deleter(Construct * construct){
+  --construct->lock_count;
+  if (construct->lock_count == 0) {
+    construct->pthread_scoped = {};
   }
 }
 

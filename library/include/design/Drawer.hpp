@@ -13,7 +13,7 @@ namespace design {
 class Drawer : public lvgl::ObjectAccess<Drawer> {
 public:
 
-  struct Data : lvgl::UserDataAccess<Data> {
+  struct Data : public lvgl::UserDataAccess<Data> {
     Data(const char * name = "") : lvgl::UserDataAccess<Data>(name){}
     API_PMAZ(close_style, Data, lvgl::Style, {});
     API_PMAZ(partial_style, Data, lvgl::Style, {});

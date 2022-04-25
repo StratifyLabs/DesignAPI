@@ -11,7 +11,6 @@
 namespace design {
 
 class ModelScope : public thread::Mutex::Scope {
-
 public:
   struct Construct {
     thread::Mutex mutex = thread::Mutex(
@@ -23,10 +22,11 @@ public:
   };
 
   ModelScope(Construct &options);
-  ~ModelScope();
 
 private:
-  Construct *m_construct = nullptr;
+  static void deleter(Construct * construct);
+  using Pointer = std::unique_ptr<Construct, decltype(&deleter)>;
+  Pointer m_pointer;
 };
 
 } // namespace design
