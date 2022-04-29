@@ -28,7 +28,7 @@ public:
   LVGL_OBJECT_ACCESS_GET_CLASS(obj_class);
 
   //drawer can be horizontal or vertical
-  Drawer &add_content(lvgl::Object object);
+  Drawer &add_content(const lvgl::Object & object);
 
   Drawer & set_open_from_right();
   Drawer & set_open_from_top();

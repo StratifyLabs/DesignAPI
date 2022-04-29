@@ -20,7 +20,7 @@ Drawer::Drawer(Data &data) {
     .add_style(data.partial_style, lvgl::State::user2);
 }
 
-Drawer &Drawer::add_content(lvgl::Object object) {
+Drawer &Drawer::add_content(const lvgl::Object & object) {
   add(object.get<lvgl::Generic>());
   return *this;
 }

@@ -8,6 +8,7 @@ set(SOURCES
 	HorizontalLine.cpp
 	Modal.cpp
 	ModelScope.cpp
+	Plot.cpp
 	Toast.cpp
 	Worker.cpp
 

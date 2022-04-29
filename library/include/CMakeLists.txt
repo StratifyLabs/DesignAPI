@@ -4,11 +4,12 @@ set(SOURCES
 	design/Badge.hpp
 	design/Card.hpp
 	design/Drawer.hpp
-	design/Typography.hpp
 	design/HorizontalLine.hpp
 	design/Modal.hpp
 	design/ModelScope.hpp
+	design/Plot.hpp
 	design/Toast.hpp
+	design/Typography.hpp
 	design/Worker.hpp
 
 	design/incbin.h

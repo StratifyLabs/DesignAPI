@@ -17,7 +17,7 @@ public:
   Modal &set_enabled(bool value = true);
   Modal &close(chrono::MicroTime delay);
 
-  Modal &add_content(lvgl::Object object);
+  Modal &add_content(const lvgl::Object & object);
 
 private:
   struct Names {

@@ -36,7 +36,7 @@ Modal &Modal::close(chrono::MicroTime delay) {
   return *this;
 }
 
-Modal &Modal::add_content(lvgl::Object object) {
+Modal &Modal::add_content(const lvgl::Object & object) {
   return add(object.get<Generic>()
                .set_alignment(lvgl::Alignment::top_middle)
                .add_style("modal_content")
