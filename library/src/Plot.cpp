@@ -148,10 +148,16 @@ Plot &Plot::add_control(const Object &object) {
   return *this;
 }
 
-Plot &Plot::add_legend(const Legend &legend) {
+Plot &Plot::add_legend_below(const Legend &legend) {
   find<Column>(Names::main_column).add(Legend(legend.object()));
   return *this;
 }
+
+Plot &Plot::add_legend_right(const Plot::Legend &legend) {
+  find<Row>(Names::row_for_chart).add(Legend(legend.object()));
+  return *this;
+}
+
 
 void Plot::handle_draw_part_begin(lv_event_t *e) {
   auto event = Event(e);
@@ -217,9 +223,7 @@ Plot &Plot::set_window(size_t offset, size_t count, size_t total) {
     find<Slider, IsAssertOnFail::no>(WindowSlider::Names::plot_control_window_slider);
 
   if (slider.is_valid()) {
-    API_PRINTF_TRACE_LINE();
     slider.get_parent<WindowSlider>().set_value(data()->offset, data()->count, total);
-    API_PRINTF_TRACE_LINE();
   }
 
   return *this;
@@ -232,7 +236,7 @@ void Plot::load_data(size_t point_offset, size_t point_count) {
     const auto maximum_point_count = get_maximum_point_count(point_offset);
     return point_count > maximum_point_count ? maximum_point_count : point_count;
   }();
-  printf("count given:%d effective:%d\n", point_count, effective_point_count);
+
   chart.set_point_count(effective_point_count);
 
   data()->offset = point_offset;
@@ -294,8 +298,12 @@ void Plot::load_data(size_t point_offset, size_t point_count) {
         .set_range(Chart::Axis::secondary_x, secondary_x);
     }
 
-    chart.set_range(Chart::Axis::primary_y, primary_y)
-      .set_range(Chart::Axis::secondary_y, secondary_y);
+    if( data()->is_auto_range_primary_y ) {
+      chart.set_range(Chart::Axis::primary_y, primary_y);
+    }
+    if( data()->is_auto_range_secondary_y ) {
+      chart.set_range(Chart::Axis::secondary_y, secondary_y);
+    }
   }
 }
 
@@ -315,6 +323,15 @@ bool Plot::is_left_justified() const {
     return slider.get_left_value() == 0;
   }
   return false;
+}
+
+Plot &Plot::update_point_count(size_t total) {
+  if( is_right_justified() && is_left_justified() ){
+    set_window(0, count() + 1, total);
+  } else if( is_right_justified() ){
+    set_window(offset() + 1, count(), total);
+  }
+  return *this;
 }
 
 Plot::WindowSlider::WindowSlider(const char *name) {

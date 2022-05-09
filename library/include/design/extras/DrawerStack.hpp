@@ -33,6 +33,11 @@ public:
   static DrawerStack find_drawer_stack_parent(lvgl::Object child_object);
   static DrawerStack find_drawer_stack_child(lvgl::Object child_object);
 
+  DrawerStack & set_open_from_right();
+  DrawerStack & set_open_from_top();
+  DrawerStack & set_open_from_bottom();
+  DrawerStack & set_open_from_left();
+
   DrawerStack &add_drawer(lvgl::Object object);
   DrawerStack &add(lvgl::Object object) { return add_drawer(object); }
 

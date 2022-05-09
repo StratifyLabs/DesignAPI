@@ -6,6 +6,7 @@
 #include "design/Drawer.hpp"
 
 using namespace design;
+using namespace lvgl;
 
 DrawerStack::DrawerStack(Data &data) {
   construct_object(data.cast_as_name());
@@ -127,4 +128,34 @@ Drawer DrawerStack::find_drawer(const char *name) const {
     return get_parent_drawer(item);
   }
   return Drawer(nullptr);
+}
+
+DrawerStack &DrawerStack::set_open_from_right() {
+  auto *data = user_data<Data>();
+  data->drawer_data.open_style.set_translate_x(0_percent).set_translate_y(0);
+  data->drawer_data.close_style.set_translate_x(105_percent).set_translate_y(0);
+  return *this;
+}
+
+DrawerStack &DrawerStack::set_open_from_bottom() {
+  auto *data = user_data<Data>();
+  data->drawer_data.open_style.set_translate_y(0_percent).set_translate_x(0);
+  data->drawer_data.close_style.set_translate_y(105_percent).set_translate_x(0);
+  return *this;
+}
+
+DrawerStack &DrawerStack::set_open_from_left() {
+  auto *data = user_data<Data>();
+  data->drawer_data.open_style.set_translate_x(0).set_translate_y(0);
+  data->drawer_data.close_style.set_translate_x(-1 * update_layout().get_width())
+    .set_translate_y(0);
+  return *this;
+}
+
+DrawerStack &DrawerStack::set_open_from_top() {
+  auto *data = user_data<Data>();
+  data->drawer_data.open_style.set_translate_y(0).set_translate_x(0);
+  data->drawer_data.close_style.set_translate_y(-1 * update_layout().get_height())
+    .set_translate_x(0);
+  return *this;
 }

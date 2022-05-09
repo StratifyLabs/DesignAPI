@@ -23,6 +23,7 @@
 
 using namespace design;
 using namespace lvgl;
+using namespace var;
 
 Form Form::find_form_parent(lvgl::Object child_object) {
   auto current = child_object.get_parent();
@@ -385,7 +386,10 @@ void Form::LineField::handle_text_focused(lv_event_t *e) {
 
 Form::SelectFile::SelectFile(Data &data) {
   construct_object(data.cast_as_name());
+
   // FS user data points to the SelectFile Object
+  // the associated object value will point to the FileSystemCard in the modal
+  // it can't be set to this object
   data.set_user_data(m_object);
 
   fill_width();
@@ -450,9 +454,9 @@ void Form::SelectFile::handle_clicked(lv_event_t *e) {
   auto label = event.target().get_child(0).get<Label>();
 
   if (var::StringView(label.get_text()) == LV_SYMBOL_OK) {
-    Event::send(select_file, EventCode::notified);
     label.set_text_as_static(LV_SYMBOL_DIRECTORY);
     select_file.validate_value(file_system_data);
+    Event::send(select_file, EventCode::notified);
     return;
   }
 
@@ -474,7 +478,7 @@ void Form::SelectFile::handle_clicked(lv_event_t *e) {
 void Form::SelectFile::handle_notified(lv_event_t *e) {
   auto self = Event(e).target();
   auto *fs_data = self.user_data<Data>();
-  auto select_file = SelectFile(reinterpret_cast<lv_obj_t *>(fs_data->user_data));
+  auto select_file = SelectFile(static_cast<lv_obj_t *>(fs_data->user_data));
 
   if (fs_data->notify_status == FileSystemCard::NotifyStatus::selected) {
     select_file.find<TextArea>(Names::selected_path_text_area)
@@ -528,8 +532,27 @@ Form::IsValid Form::SelectFile::validate_value(Data *data) {
     }
   }
 
+  data->relative_path = get_value();
   hide_error_message();
   return IsValid::yes;
+}
+
+Form::SelectFile &Form::SelectFile::set_value(const char *value) {
+  auto *data = user_data<Data>();
+  const StringView value_string = StringView(value);
+  auto text_area = find<lvgl::TextArea>(Names::selected_path_text_area);
+  if (!data->is_absolute_path && !data->base_path.is_empty()) {
+    if (value_string.find(data->base_path) == 0) {
+      // strip the base path
+      data->relative_path =
+        value_string.get_substring_at_position(data->base_path.length());
+    }
+  } else {
+    data->relative_path = value;
+  }
+
+  text_area.set_text(data->relative_path);
+  return *this;
 }
 
 void Form::set_error_message(Object form_object, const char *message) {

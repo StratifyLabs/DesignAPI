@@ -252,10 +252,7 @@ public:
       return find<lvgl::TextArea>(Names::selected_path_text_area).get_text();
     }
 
-    SelectFile &set_value(const char *value) {
-      find<lvgl::TextArea>(Names::selected_path_text_area).set_text(value);
-      return *this;
-    }
+    SelectFile &set_value(const char *value);
 
     SelectFile &set_value_as_static(const char *value) {
       find<lvgl::TextArea>(Names::selected_path_text_area).set_text_as_static(value);

@@ -60,6 +60,9 @@ public:
     API_PMAZ(get_data, Data, GetDataCallback, nullptr);
     API_PMAZ(offset, Data, size_t, {});
 
+    API_PUBLIC_BOOL(Data,auto_range_primary_y,true);
+    API_PUBLIC_BOOL(Data,auto_range_secondary_y,true);
+
   };
 
   class WindowSlider : public lvgl::ObjectAccess<WindowSlider> {
@@ -100,8 +103,10 @@ public:
   Plot &set_vertical_label_margin_percentage(lv_coord_t value);
 
   Plot &add_control(const lvgl::Object &object);
-  Plot &add_legend(const Legend &legend);
+  Plot &add_legend_below(const Legend &legend);
+  Plot &add_legend_right(const Legend &legend);
   Plot &set_window(size_t offset, size_t count, size_t total);
+  Plot &update_point_count(size_t total);
 
   lvgl::Label get_title() const { return find<lvgl::Label>(Names::title); }
 
