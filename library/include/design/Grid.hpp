@@ -43,26 +43,26 @@ public:
 
   Row &justify_space_between() {
     return set_flex_align(
-      lvgl::SetFlexAlign().set_main(lvgl::FlexAlign::space_between));
+      lvgl::SetFlexAlign().set_align_main(lvgl::FlexAlign::space_between));
   }
 
   Row &justify_space_around() {
     return set_flex_align(
-      lvgl::SetFlexAlign().set_main(lvgl::FlexAlign::space_around));
+      lvgl::SetFlexAlign().set_align_main(lvgl::FlexAlign::space_around));
   }
 
   Row &justify_space_evenly() {
     return set_flex_align(
-      lvgl::SetFlexAlign().set_main(lvgl::FlexAlign::space_evenly));
+      lvgl::SetFlexAlign().set_align_main(lvgl::FlexAlign::space_evenly));
   }
 
   Row &justify_start() {
     return set_flex_align(
-      lvgl::SetFlexAlign().set_main(lvgl::FlexAlign::start));
+      lvgl::SetFlexAlign().set_align_main(lvgl::FlexAlign::start));
   }
 
   Row &justify_end() {
-    return set_flex_align(lvgl::SetFlexAlign().set_main(lvgl::FlexAlign::end));
+    return set_flex_align(lvgl::SetFlexAlign().set_align_main(lvgl::FlexAlign::end));
   }
 };
 
@@ -75,17 +75,17 @@ public:
 
   Column &justify_space_between() {
     return set_flex_align(
-      lvgl::SetFlexAlign().set_main(lvgl::FlexAlign::space_between));
+      lvgl::SetFlexAlign().set_align_main(lvgl::FlexAlign::space_between));
   }
 
   Column &justify_space_around() {
     return set_flex_align(
-      lvgl::SetFlexAlign().set_main(lvgl::FlexAlign::space_around));
+      lvgl::SetFlexAlign().set_align_main(lvgl::FlexAlign::space_around));
   }
 
   Column &justify_space_evenly() {
     return set_flex_align(
-      lvgl::SetFlexAlign().set_main(lvgl::FlexAlign::space_evenly));
+      lvgl::SetFlexAlign().set_align_main(lvgl::FlexAlign::space_evenly));
   }
 };
 

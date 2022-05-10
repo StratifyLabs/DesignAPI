@@ -61,7 +61,7 @@ Form::Form(const char *name) {
   construct_object(name);
   add_style(Column::get_style())
     .set_flex_align(SetFlexAlign()
-                      .set_main(FlexAlign::start)
+                      .set_align_main(FlexAlign::start)
                       .set_cross(FlexAlign::start)
                       .set_track_cross(FlexAlign::start))
     .fill_width()
@@ -185,7 +185,7 @@ Form::Form(const char *name, const Schema schema) {
   construct_object(name);
   add_style(Column::get_style())
     .set_flex_align(SetFlexAlign()
-                      .set_main(FlexAlign::start)
+                      .set_align_main(FlexAlign::start)
                       .set_cross(FlexAlign::start)
                       .set_track_cross(FlexAlign::start))
     .fill_width()

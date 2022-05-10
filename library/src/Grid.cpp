@@ -146,7 +146,7 @@ const lvgl::Style &Row::get_style() {
     = lvgl::Style()
         .set_flex_layout()
         .set_flex_flow(lvgl::FlexFlow::row)
-        .set_flex_align(lvgl::SetFlexAlign().set_main(lvgl::FlexAlign::start))
+        .set_flex_align(lvgl::SetFlexAlign().set_align_main(lvgl::FlexAlign::start))
         .set_column_padding(0);
   return style;
 }
@@ -155,7 +155,7 @@ Row::Row(const char *name) {
   construct_object(name);
   set_flex_layout()
     .set_flex_flow(lvgl::FlexFlow::row)
-    .set_flex_align(SetFlexAlign().set_main(lvgl::FlexAlign::start))
+    .set_flex_align(SetFlexAlign().set_align_main(lvgl::FlexAlign::start))
     .add_style("row");
 }
 
@@ -164,7 +164,7 @@ const lvgl::Style &Column::get_style() {
     = lvgl::Style()
         .set_flex_layout()
         .set_flex_flow(FlexFlow::column)
-        .set_flex_align(SetFlexAlign().set_main(FlexAlign::start))
+        .set_flex_align(SetFlexAlign().set_align_main(FlexAlign::start))
         .set_row_padding(0);
   return style;
 }
@@ -174,7 +174,7 @@ Column::Column(const char *name) {
 
   set_flex_layout()
     .set_flex_flow(FlexFlow::column)
-    .set_flex_align(SetFlexAlign().set_main(FlexAlign::start))
+    .set_flex_align(SetFlexAlign().set_align_main(FlexAlign::start))
     .add_style("col");
 }
 

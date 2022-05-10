@@ -190,7 +190,7 @@ Plot Plot::get_plot_from_child_event(lv_event_t *e) {
 }
 
 size_t Plot::get_maximum_point_count(size_t offset) {
-  size_t result = SIZE_T_MAX;
+  size_t result = SIZE_MAX;
   size_t series_index = 0;
 
   auto update_result = [&](Chart::Axis axis) {

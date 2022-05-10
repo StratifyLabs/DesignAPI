@@ -37,7 +37,6 @@ Drawer &Drawer::open_partial() {
 
 Drawer &Drawer::close() {
   clear_state(lvgl::State::user1).clear_state(lvgl::State::user2);
-  printf("close drawer %s\n", get_child(0).name());
   return notify_content(EventCode::exited);
 }
 
