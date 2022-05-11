@@ -28,8 +28,6 @@ public:
   Toast(chrono::MicroTime lifetime);
   LVGL_OBJECT_ACCESS_CONSTRUCT_FROM_OBJECT(Toast);
 
-  Toast & set_position(Position direction);
-
 private:
 
   struct Names {
@@ -43,10 +41,5 @@ private:
 
 }
 
-namespace printer {
-class Printer;
-//Add operators to send any important debug tracing data to a printer
-Printer &operator<<(Printer &printer, const design::Toast &a);
-} // namespace printer
 
 #endif // DESIGNAPI_DESIGN_TOAST_HPP_

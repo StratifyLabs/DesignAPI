@@ -14,6 +14,8 @@
 using namespace lvgl;
 using namespace design;
 
+LVGL_OBJECT_ASSERT_SIZE(NotificationToast);
+
 NotificationToast::NotificationToast(chrono::MicroTime lifetime) {
   construct_object(Names::toast_name);
   add_style(Column::get_style());

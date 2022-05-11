@@ -12,6 +12,8 @@
 using namespace design;
 using namespace lvgl;
 
+LVGL_OBJECT_ASSERT_SIZE(FormList);
+
 FormList::FormList(Data& data) {
   construct_list(data.cast_as_name());
 }

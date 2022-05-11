@@ -7,6 +7,8 @@
 using namespace lvgl;
 using namespace design;
 
+LVGL_OBJECT_ASSERT_SIZE(Toast);
+
 Toast::Toast(const char * name, chrono::MicroTime lifetime){
   construct_toast(name, lifetime);
 }

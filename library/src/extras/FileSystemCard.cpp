@@ -28,6 +28,8 @@
 using namespace design;
 using namespace lvgl;
 
+LVGL_OBJECT_ASSERT_SIZE(FileSystemCard);
+
 const char *FileSystemCard::root_drive_path() { return ROOT_DRIVE; }
 
 var::PathString

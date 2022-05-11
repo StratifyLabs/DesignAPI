@@ -10,6 +10,8 @@
 using namespace lvgl;
 using namespace design;
 
+LVGL_OBJECT_ASSERT_SIZE(Modal);
+
 Modal::Modal(const char *name) {
   construct_object(name);
   add_style("modal");

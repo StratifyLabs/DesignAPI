@@ -10,6 +10,9 @@
 using namespace lvgl;
 using namespace design;
 
+LVGL_OBJECT_ASSERT_SIZE(KeyboardInput);
+
+
 KeyboardInput::KeyboardInput(const char *name) {
   construct_object(name);
   add(Column()

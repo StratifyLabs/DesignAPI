@@ -10,6 +10,9 @@
 using namespace lvgl;
 using namespace design;
 
+LVGL_OBJECT_ASSERT_SIZE(Drawer);
+
+
 Drawer::Drawer(Data &data) {
   construct_object(data.cast_as_name());
   add_style("drawer_ease_out")

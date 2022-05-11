@@ -8,6 +8,8 @@
 using namespace design;
 using namespace lvgl;
 
+LVGL_OBJECT_ASSERT_SIZE(HorizontalLine);
+
 HorizontalLine::HorizontalLine(const char *name){
   construct_object(name);
   add_style("hline");

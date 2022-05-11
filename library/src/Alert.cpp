@@ -10,6 +10,8 @@
 using namespace design;
 using namespace lvgl;
 
+LVGL_OBJECT_ASSERT_SIZE(Alert);
+
 Alert::Alert(const char *name) {
   construct_object(name);
   set_width(size_from_content).add_style("alert");

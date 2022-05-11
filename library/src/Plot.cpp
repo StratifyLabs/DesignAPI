@@ -14,6 +14,10 @@ using namespace lvgl;
 using namespace design;
 using namespace var;
 
+LVGL_OBJECT_ASSERT_SIZE(Plot::Legend);
+LVGL_OBJECT_ASSERT_SIZE(Plot::Legend::Series);
+LVGL_OBJECT_ASSERT_SIZE(Plot);
+
 Plot::Legend::Legend(const char *name) {
   construct_object(name);
   add_style("card");

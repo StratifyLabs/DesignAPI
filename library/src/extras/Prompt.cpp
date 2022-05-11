@@ -13,16 +13,21 @@
 using namespace lvgl;
 using namespace design;
 
-Prompt::Prompt(Data &data) {
-  construct_object(data.cast_as_name());
+LVGL_OBJECT_ASSERT_SIZE(Prompt);
+
+Prompt::Prompt(const char * name) {
+  construct_object(Data::create_from_name(name));
+
+  auto * data = user_data<Data>();
+
   add_style("card");
   add(Container(Names::container).fill().add(Column(Names::column).fill()));
 
   auto column = find<Column>(Names::column);
 
-  column.add(Heading1(data.title))
+  column.add(Heading1(data->title))
     .add(HorizontalLine())
-    .add(Paragraph(Names::message_label, data.message)
+    .add(Paragraph(Names::message_label, data->message)
            .fill_width()
            .set_flex_grow())
     .add(Row(Names::button_row));
@@ -31,20 +36,20 @@ Prompt::Prompt(Data &data) {
                       .fill_width()
                       .add(NakedContainer().set_height(0).set_flex_grow());
 
-  if (data.accept_callback) {
+  if (data->accept_callback) {
     button_row.add(
       lvgl::Button(Names::accept_button)
-        .add_label(data.accept)
+        .add_label(data->accept)
         .add_style("prompt_accept_btn")
-        .add_event_callback(EventCode::clicked, data.accept_callback));
+        .add_event_callback(EventCode::clicked, data->accept_callback));
   }
 
-  if (data.reject_callback) {
+  if (data->reject_callback) {
     button_row.add(
       lvgl::Button(Names::reject_button)
-        .add_label(data.reject)
+        .add_label(data->reject)
         .add_style("prompt_reject_btn")
-        .add_event_callback(EventCode::clicked, data.reject_callback));
+        .add_event_callback(EventCode::clicked, data->reject_callback));
   }
 }
 

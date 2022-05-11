@@ -11,6 +11,8 @@
 using namespace lvgl;
 using namespace design;
 
+LVGL_OBJECT_ASSERT_SIZE(FileTextArea);
+
 FileTextArea::FileTextArea(Data &data) {
   m_object = api()->textarea_create(screen_object());
   set_user_data(m_object, data.cast_as_name());

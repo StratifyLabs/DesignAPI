@@ -230,10 +230,10 @@ const char *Utility::to_cstring(TextAlignment value) {
   return "unknown";
 }
 TextAlignment Utility::text_alignment_from_string(const var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(TextAlignment, auto_);
-  LVGL_PROPERTY_STRING_CASE(TextAlignment, left);
-  LVGL_PROPERTY_STRING_CASE(TextAlignment, right);
-  LVGL_PROPERTY_STRING_CASE(TextAlignment, center);
+  LVGL_PROPERTY_STRING_CASE(TextAlignment, auto_)
+  LVGL_PROPERTY_STRING_CASE(TextAlignment, left)
+  LVGL_PROPERTY_STRING_CASE(TextAlignment, right)
+  LVGL_PROPERTY_STRING_CASE(TextAlignment, center)
   return TextAlignment::invalid;
 }
 
@@ -251,13 +251,13 @@ const char *Utility::to_cstring(BorderSide value) {
   return "unknown";
 }
 BorderSide Utility::border_side_from_string(const var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(BorderSide, none);
-  LVGL_PROPERTY_STRING_CASE(BorderSide, bottom);
-  LVGL_PROPERTY_STRING_CASE(BorderSide, top);
-  LVGL_PROPERTY_STRING_CASE(BorderSide, left);
-  LVGL_PROPERTY_STRING_CASE(BorderSide, right);
-  LVGL_PROPERTY_STRING_CASE(BorderSide, full);
-  LVGL_PROPERTY_STRING_CASE(BorderSide, internal);
+  LVGL_PROPERTY_STRING_CASE(BorderSide, none)
+  LVGL_PROPERTY_STRING_CASE(BorderSide, bottom)
+  LVGL_PROPERTY_STRING_CASE(BorderSide, top)
+  LVGL_PROPERTY_STRING_CASE(BorderSide, left)
+  LVGL_PROPERTY_STRING_CASE(BorderSide, right)
+  LVGL_PROPERTY_STRING_CASE(BorderSide, full)
+  LVGL_PROPERTY_STRING_CASE(BorderSide, internal)
   return BorderSide::invalid;
 }
 
@@ -272,9 +272,9 @@ const char *Utility::to_cstring(GradientDirection value) {
 }
 GradientDirection
 Utility::gradient_direction_from_string(const var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(GradientDirection, none);
-  LVGL_PROPERTY_STRING_CASE(GradientDirection, horizontal);
-  LVGL_PROPERTY_STRING_CASE(GradientDirection, vertical);
+  LVGL_PROPERTY_STRING_CASE(GradientDirection, none)
+  LVGL_PROPERTY_STRING_CASE(GradientDirection, horizontal)
+  LVGL_PROPERTY_STRING_CASE(GradientDirection, vertical)
   return GradientDirection::invalid;
 }
 
@@ -290,11 +290,11 @@ const char *Utility::to_cstring(BaseDirection value) {
   return "unknown";
 }
 BaseDirection Utility::base_direction_from_string(const var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(BaseDirection, auto_);
-  LVGL_PROPERTY_STRING_CASE(BaseDirection, left_to_right);
-  LVGL_PROPERTY_STRING_CASE(BaseDirection, right_to_left);
-  LVGL_PROPERTY_STRING_CASE(BaseDirection, neutral);
-  LVGL_PROPERTY_STRING_CASE(BaseDirection, weak);
+  LVGL_PROPERTY_STRING_CASE(BaseDirection, auto_)
+  LVGL_PROPERTY_STRING_CASE(BaseDirection, left_to_right)
+  LVGL_PROPERTY_STRING_CASE(BaseDirection, right_to_left)
+  LVGL_PROPERTY_STRING_CASE(BaseDirection, neutral)
+  LVGL_PROPERTY_STRING_CASE(BaseDirection, weak)
   return BaseDirection::invalid;
 }
 
@@ -313,14 +313,14 @@ const char *Utility::to_cstring(Direction value) {
   return "unknown";
 }
 Direction Utility::direction_from_string(const var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(Direction, none);
-  LVGL_PROPERTY_STRING_CASE(Direction, left);
-  LVGL_PROPERTY_STRING_CASE(Direction, right);
-  LVGL_PROPERTY_STRING_CASE(Direction, top);
-  LVGL_PROPERTY_STRING_CASE(Direction, bottom);
-  LVGL_PROPERTY_STRING_CASE(Direction, horizontal);
-  LVGL_PROPERTY_STRING_CASE(Direction, vertical);
-  LVGL_PROPERTY_STRING_CASE(Direction, all);
+  LVGL_PROPERTY_STRING_CASE(Direction, none)
+  LVGL_PROPERTY_STRING_CASE(Direction, left)
+  LVGL_PROPERTY_STRING_CASE(Direction, right)
+  LVGL_PROPERTY_STRING_CASE(Direction, top)
+  LVGL_PROPERTY_STRING_CASE(Direction, bottom)
+  LVGL_PROPERTY_STRING_CASE(Direction, horizontal)
+  LVGL_PROPERTY_STRING_CASE(Direction, vertical)
+  LVGL_PROPERTY_STRING_CASE(Direction, all)
   return Direction::invalid;
 }
 
@@ -353,28 +353,28 @@ const char *Utility::to_cstring(Alignment value) {
   return "unknown";
 }
 Alignment Utility::alignment_from_string(const var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(Alignment, default_);
-  LVGL_PROPERTY_STRING_CASE(Alignment, top_left);
-  LVGL_PROPERTY_STRING_CASE(Alignment, top_middle);
-  LVGL_PROPERTY_STRING_CASE(Alignment, top_right);
-  LVGL_PROPERTY_STRING_CASE(Alignment, bottom_left);
-  LVGL_PROPERTY_STRING_CASE(Alignment, bottom_middle);
-  LVGL_PROPERTY_STRING_CASE(Alignment, bottom_right);
-  LVGL_PROPERTY_STRING_CASE(Alignment, left_middle);
-  LVGL_PROPERTY_STRING_CASE(Alignment, right_middle);
-  LVGL_PROPERTY_STRING_CASE(Alignment, center);
-  LVGL_PROPERTY_STRING_CASE(Alignment, out_top_left);
-  LVGL_PROPERTY_STRING_CASE(Alignment, out_top_middle);
-  LVGL_PROPERTY_STRING_CASE(Alignment, out_top_right);
-  LVGL_PROPERTY_STRING_CASE(Alignment, out_bottom_left);
-  LVGL_PROPERTY_STRING_CASE(Alignment, out_bottom_middle);
-  LVGL_PROPERTY_STRING_CASE(Alignment, out_bottom_right);
-  LVGL_PROPERTY_STRING_CASE(Alignment, out_left_top);
-  LVGL_PROPERTY_STRING_CASE(Alignment, out_left_middle);
-  LVGL_PROPERTY_STRING_CASE(Alignment, out_left_bottom);
-  LVGL_PROPERTY_STRING_CASE(Alignment, out_right_top);
-  LVGL_PROPERTY_STRING_CASE(Alignment, out_right_middle);
-  LVGL_PROPERTY_STRING_CASE(Alignment, out_right_bottom);
+  LVGL_PROPERTY_STRING_CASE(Alignment, default_)
+  LVGL_PROPERTY_STRING_CASE(Alignment, top_left)
+  LVGL_PROPERTY_STRING_CASE(Alignment, top_middle)
+  LVGL_PROPERTY_STRING_CASE(Alignment, top_right)
+  LVGL_PROPERTY_STRING_CASE(Alignment, bottom_left)
+  LVGL_PROPERTY_STRING_CASE(Alignment, bottom_middle)
+  LVGL_PROPERTY_STRING_CASE(Alignment, bottom_right)
+  LVGL_PROPERTY_STRING_CASE(Alignment, left_middle)
+  LVGL_PROPERTY_STRING_CASE(Alignment, right_middle)
+  LVGL_PROPERTY_STRING_CASE(Alignment, center)
+  LVGL_PROPERTY_STRING_CASE(Alignment, out_top_left)
+  LVGL_PROPERTY_STRING_CASE(Alignment, out_top_middle)
+  LVGL_PROPERTY_STRING_CASE(Alignment, out_top_right)
+  LVGL_PROPERTY_STRING_CASE(Alignment, out_bottom_left)
+  LVGL_PROPERTY_STRING_CASE(Alignment, out_bottom_middle)
+  LVGL_PROPERTY_STRING_CASE(Alignment, out_bottom_right)
+  LVGL_PROPERTY_STRING_CASE(Alignment, out_left_top)
+  LVGL_PROPERTY_STRING_CASE(Alignment, out_left_middle)
+  LVGL_PROPERTY_STRING_CASE(Alignment, out_left_bottom)
+  LVGL_PROPERTY_STRING_CASE(Alignment, out_right_top)
+  LVGL_PROPERTY_STRING_CASE(Alignment, out_right_middle)
+  LVGL_PROPERTY_STRING_CASE(Alignment, out_right_bottom)
   return Alignment::invalid;
 }
 
@@ -393,14 +393,14 @@ const char *Utility::to_cstring(FlexFlow value) {
   return "unknown";
 }
 FlexFlow Utility::flex_flow_from_string(const var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(FlexFlow, row);
-  LVGL_PROPERTY_STRING_CASE(FlexFlow, column);
-  LVGL_PROPERTY_STRING_CASE(FlexFlow, row_wrap);
-  LVGL_PROPERTY_STRING_CASE(FlexFlow, row_reverse);
-  LVGL_PROPERTY_STRING_CASE(FlexFlow, row_wrap_reverse);
-  LVGL_PROPERTY_STRING_CASE(FlexFlow, column_wrap);
-  LVGL_PROPERTY_STRING_CASE(FlexFlow, column_reverse);
-  LVGL_PROPERTY_STRING_CASE(FlexFlow, column_wrap_reverse);
+  LVGL_PROPERTY_STRING_CASE(FlexFlow, row)
+  LVGL_PROPERTY_STRING_CASE(FlexFlow, column)
+  LVGL_PROPERTY_STRING_CASE(FlexFlow, row_wrap)
+  LVGL_PROPERTY_STRING_CASE(FlexFlow, row_reverse)
+  LVGL_PROPERTY_STRING_CASE(FlexFlow, row_wrap_reverse)
+  LVGL_PROPERTY_STRING_CASE(FlexFlow, column_wrap)
+  LVGL_PROPERTY_STRING_CASE(FlexFlow, column_reverse)
+  LVGL_PROPERTY_STRING_CASE(FlexFlow, column_wrap_reverse)
   return FlexFlow::invalid;
 }
 
@@ -417,12 +417,12 @@ const char *Utility::to_cstring(FlexAlign value) {
   return "unknown";
 }
 FlexAlign Utility::flex_align_from_string(const var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(FlexAlign, start);
-  LVGL_PROPERTY_STRING_CASE(FlexAlign, end);
-  LVGL_PROPERTY_STRING_CASE(FlexAlign, center);
-  LVGL_PROPERTY_STRING_CASE(FlexAlign, space_evenly);
-  LVGL_PROPERTY_STRING_CASE(FlexAlign, space_around);
-  LVGL_PROPERTY_STRING_CASE(FlexAlign, space_between);
+  LVGL_PROPERTY_STRING_CASE(FlexAlign, start)
+  LVGL_PROPERTY_STRING_CASE(FlexAlign, end)
+  LVGL_PROPERTY_STRING_CASE(FlexAlign, center)
+  LVGL_PROPERTY_STRING_CASE(FlexAlign, space_evenly)
+  LVGL_PROPERTY_STRING_CASE(FlexAlign, space_around)
+  LVGL_PROPERTY_STRING_CASE(FlexAlign, space_between)
   return FlexAlign::invalid;
 }
 
@@ -447,19 +447,19 @@ const char *Utility::to_cstring(State value) {
   return "unknown";
 }
 State Utility::state_from_string(const var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(State, checked);
-  LVGL_PROPERTY_STRING_CASE(State, focused);
-  LVGL_PROPERTY_STRING_CASE(State, focus_key);
-  LVGL_PROPERTY_STRING_CASE(State, edited);
-  LVGL_PROPERTY_STRING_CASE(State, hovered);
-  LVGL_PROPERTY_STRING_CASE(State, pressed);
-  LVGL_PROPERTY_STRING_CASE(State, scrolled);
-  LVGL_PROPERTY_STRING_CASE(State, disabled);
-  LVGL_PROPERTY_STRING_CASE(State, user1);
-  LVGL_PROPERTY_STRING_CASE(State, user2);
-  LVGL_PROPERTY_STRING_CASE(State, user3);
-  LVGL_PROPERTY_STRING_CASE(State, user4);
-  LVGL_PROPERTY_STRING_CASE(State, any);
+  LVGL_PROPERTY_STRING_CASE(State, checked)
+  LVGL_PROPERTY_STRING_CASE(State, focused)
+  LVGL_PROPERTY_STRING_CASE(State, focus_key)
+  LVGL_PROPERTY_STRING_CASE(State, edited)
+  LVGL_PROPERTY_STRING_CASE(State, hovered)
+  LVGL_PROPERTY_STRING_CASE(State, pressed)
+  LVGL_PROPERTY_STRING_CASE(State, scrolled)
+  LVGL_PROPERTY_STRING_CASE(State, disabled)
+  LVGL_PROPERTY_STRING_CASE(State, user1)
+  LVGL_PROPERTY_STRING_CASE(State, user2)
+  LVGL_PROPERTY_STRING_CASE(State, user3)
+  LVGL_PROPERTY_STRING_CASE(State, user4)
+  LVGL_PROPERTY_STRING_CASE(State, any)
   return State::default_;
 }
 
@@ -475,10 +475,10 @@ const char *Utility::to_cstring(ScrollBarMode value) {
 }
 ScrollBarMode
 Utility::scroll_bar_mode_from_string(const var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(ScrollBarMode, off);
-  LVGL_PROPERTY_STRING_CASE(ScrollBarMode, on);
-  LVGL_PROPERTY_STRING_CASE(ScrollBarMode, active);
-  LVGL_PROPERTY_STRING_CASE(ScrollBarMode, auto_);
+  LVGL_PROPERTY_STRING_CASE(ScrollBarMode, off)
+  LVGL_PROPERTY_STRING_CASE(ScrollBarMode, on)
+  LVGL_PROPERTY_STRING_CASE(ScrollBarMode, active)
+  LVGL_PROPERTY_STRING_CASE(ScrollBarMode, auto_)
   return ScrollBarMode::invalid;
 }
 
@@ -493,10 +493,10 @@ const char *Utility::to_cstring(ScrollSnap value) {
   return "unknown";
 }
 ScrollSnap Utility::scroll_snap_mode_from_string(const var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(ScrollSnap, off);
-  LVGL_PROPERTY_STRING_CASE(ScrollSnap, start);
-  LVGL_PROPERTY_STRING_CASE(ScrollSnap, end);
-  LVGL_PROPERTY_STRING_CASE(ScrollSnap, center);
+  LVGL_PROPERTY_STRING_CASE(ScrollSnap, off)
+  LVGL_PROPERTY_STRING_CASE(ScrollSnap, start)
+  LVGL_PROPERTY_STRING_CASE(ScrollSnap, end)
+  LVGL_PROPERTY_STRING_CASE(ScrollSnap, center)
   return ScrollSnap::invalid;
 }
 
@@ -510,9 +510,9 @@ const char *Utility::to_cstring(IsAnimate value) {
   return "unknown";
 }
 IsAnimate Utility::is_animate_mode_from_string(const var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(IsAnimate, no);
-  LVGL_PROPERTY_STRING_CASE(IsAnimate, yes);
-  LVGL_PROPERTY_STRING_CASE(IsAnimate, repeat_infinite);
+  LVGL_PROPERTY_STRING_CASE(IsAnimate, no)
+  LVGL_PROPERTY_STRING_CASE(IsAnimate, yes)
+  LVGL_PROPERTY_STRING_CASE(IsAnimate, repeat_infinite)
   return IsAnimate::invalid;
 }
 
@@ -531,14 +531,14 @@ const char *Utility::to_cstring(Part value) {
   return "unknown";
 }
 Part Utility::part_from_string(const var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(Part, scrollbar);
-  LVGL_PROPERTY_STRING_CASE(Part, indicator);
-  LVGL_PROPERTY_STRING_CASE(Part, knob);
-  LVGL_PROPERTY_STRING_CASE(Part, selected);
-  LVGL_PROPERTY_STRING_CASE(Part, items);
-  LVGL_PROPERTY_STRING_CASE(Part, ticks);
-  LVGL_PROPERTY_STRING_CASE(Part, cursor);
-  LVGL_PROPERTY_STRING_CASE(Part, any);
+  LVGL_PROPERTY_STRING_CASE(Part, scrollbar)
+  LVGL_PROPERTY_STRING_CASE(Part, indicator)
+  LVGL_PROPERTY_STRING_CASE(Part, knob)
+  LVGL_PROPERTY_STRING_CASE(Part, selected)
+  LVGL_PROPERTY_STRING_CASE(Part, items)
+  LVGL_PROPERTY_STRING_CASE(Part, ticks)
+  LVGL_PROPERTY_STRING_CASE(Part, cursor)
+  LVGL_PROPERTY_STRING_CASE(Part, any)
   return Part::main;
 }
 
@@ -552,9 +552,9 @@ const char *Utility::to_cstring(BlendMode value) {
   return "unknown";
 }
 BlendMode Utility::blend_mode_from_string(const var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(BlendMode, normal);
-  LVGL_PROPERTY_STRING_CASE(BlendMode, additive);
-  LVGL_PROPERTY_STRING_CASE(BlendMode, subtractive);
+  LVGL_PROPERTY_STRING_CASE(BlendMode, normal)
+  LVGL_PROPERTY_STRING_CASE(BlendMode, additive)
+  LVGL_PROPERTY_STRING_CASE(BlendMode, subtractive)
   return BlendMode::invalid;
 }
 
@@ -576,20 +576,20 @@ const char *Utility::to_cstring(Opacity value) {
   return "unknown";
 }
 Opacity Utility::opacity_from_string(const var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(Opacity, transparent);
-  LVGL_PROPERTY_STRING_CASE(Opacity, x0);
-  LVGL_PROPERTY_STRING_CASE(Opacity, x10);
-  LVGL_PROPERTY_STRING_CASE(Opacity, x20);
-  LVGL_PROPERTY_STRING_CASE(Opacity, x30);
-  LVGL_PROPERTY_STRING_CASE(Opacity, x40);
-  LVGL_PROPERTY_STRING_CASE(Opacity, x50);
-  LVGL_PROPERTY_STRING_CASE(Opacity, x60);
-  LVGL_PROPERTY_STRING_CASE(Opacity, x70);
-  LVGL_PROPERTY_STRING_CASE(Opacity, x80);
-  LVGL_PROPERTY_STRING_CASE(Opacity, x90);
-  LVGL_PROPERTY_STRING_CASE(Opacity, opaque);
-  LVGL_PROPERTY_STRING_CASE(Opacity, cover);
-  LVGL_PROPERTY_STRING_CASE(Opacity, x100);
+  LVGL_PROPERTY_STRING_CASE(Opacity, transparent)
+  LVGL_PROPERTY_STRING_CASE(Opacity, x0)
+  LVGL_PROPERTY_STRING_CASE(Opacity, x10)
+  LVGL_PROPERTY_STRING_CASE(Opacity, x20)
+  LVGL_PROPERTY_STRING_CASE(Opacity, x30)
+  LVGL_PROPERTY_STRING_CASE(Opacity, x40)
+  LVGL_PROPERTY_STRING_CASE(Opacity, x50)
+  LVGL_PROPERTY_STRING_CASE(Opacity, x60)
+  LVGL_PROPERTY_STRING_CASE(Opacity, x70)
+  LVGL_PROPERTY_STRING_CASE(Opacity, x80)
+  LVGL_PROPERTY_STRING_CASE(Opacity, x90)
+  LVGL_PROPERTY_STRING_CASE(Opacity, opaque)
+  LVGL_PROPERTY_STRING_CASE(Opacity, cover)
+  LVGL_PROPERTY_STRING_CASE(Opacity, x100)
   return Opacity::invalid;
 }
 
@@ -615,20 +615,20 @@ const char *Utility::to_cstring(PropertyGroup value) {
 }
 
 PropertyGroup Utility::property_group_from_string(var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(PropertyGroup, alignment);
-  LVGL_PROPERTY_STRING_CASE(PropertyGroup, animation);
-  LVGL_PROPERTY_STRING_CASE(PropertyGroup, arc);
-  LVGL_PROPERTY_STRING_CASE(PropertyGroup, background);
-  LVGL_PROPERTY_STRING_CASE(PropertyGroup, border);
-  LVGL_PROPERTY_STRING_CASE(PropertyGroup, image);
-  LVGL_PROPERTY_STRING_CASE(PropertyGroup, line);
-  LVGL_PROPERTY_STRING_CASE(PropertyGroup, miscellaneous);
-  LVGL_PROPERTY_STRING_CASE(PropertyGroup, outline);
-  LVGL_PROPERTY_STRING_CASE(PropertyGroup, padding);
-  LVGL_PROPERTY_STRING_CASE(PropertyGroup, shadow);
-  LVGL_PROPERTY_STRING_CASE(PropertyGroup, size);
-  LVGL_PROPERTY_STRING_CASE(PropertyGroup, text);
-  LVGL_PROPERTY_STRING_CASE(PropertyGroup, transform);
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, alignment)
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, animation)
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, arc)
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, background)
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, border)
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, image)
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, line)
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, miscellaneous)
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, outline)
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, padding)
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, shadow)
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, size)
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, text)
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, transform)
   return PropertyGroup::invalid;
 }
 
@@ -677,8 +677,14 @@ const char *Utility::to_class_name_cstring(lvgl::PropertyType value) {
   case PropertyType::color:
     return "Color";
   case PropertyType::color_filter_descriptor:
-    return "Invalid";
   case PropertyType::coordinate:
+  case PropertyType::font:
+  case PropertyType::image_source:
+  case PropertyType::layout:
+  case PropertyType::milliseconds:
+  case PropertyType::number:
+  case PropertyType::opacity:
+  case PropertyType::transition_descriptor:
     return "Invalid";
   case PropertyType::direction:
     return "Direction";
@@ -686,52 +692,39 @@ const char *Utility::to_class_name_cstring(lvgl::PropertyType value) {
     return "FlexAlign";
   case PropertyType::flex_flow:
     return "FlexFlow";
-  case PropertyType::font:
-    return "Invalid";
   case PropertyType::gradient_direction:
     return "GradientDirection";
-  case PropertyType::image_source:
-    return "Invalid";
-  case PropertyType::layout:
-    return "Invalid";
-  case PropertyType::milliseconds:
-    return "Invalid";
-  case PropertyType::number:
-    return "Invalid";
-  case PropertyType::opacity:
-    return "Invalid";
   case PropertyType::text_alignment:
     return "TextAlignment";
   case PropertyType::text_decoration:
     return "TextDecoration";
-  case PropertyType::transition_descriptor:
-    return "Invalid";
   }
   return invalid_property_type_class_name;
 }
+
 lvgl::PropertyType Utility::property_type_from_string(var::StringView value) {
-  LVGL_PROPERTY_STRING_CASE(PropertyType, invalid);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, alignment);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, base_direction);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, blend_mode);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, boolean);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, border_side);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, color);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, color_filter_descriptor);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, coordinate);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, direction);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, flex_align);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, flex_flow);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, font);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, gradient_direction);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, image_source);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, layout);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, milliseconds);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, number);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, opacity);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, text_alignment);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, text_decoration);
-  LVGL_PROPERTY_STRING_CASE(PropertyType, transition_descriptor);
+  LVGL_PROPERTY_STRING_CASE(PropertyType, invalid)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, alignment)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, base_direction)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, blend_mode)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, boolean)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, border_side)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, color)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, color_filter_descriptor)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, coordinate)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, direction)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, flex_align)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, flex_flow)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, font)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, gradient_direction)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, image_source)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, layout)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, milliseconds)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, number)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, opacity)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, text_alignment)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, text_decoration)
+  LVGL_PROPERTY_STRING_CASE(PropertyType, transition_descriptor)
   return PropertyType::invalid;
 }
 
@@ -804,7 +797,6 @@ const char *
 Utility::property_value_to_cstring(PropertyValue value, PropertyType type) {
   switch (type) {
   case PropertyType::opacity:
-    break;
   case PropertyType::coordinate:
   case PropertyType::number:
   case PropertyType::milliseconds:

@@ -9,6 +9,11 @@
 
 using namespace design;
 
+LVGL_OBJECT_ASSERT_SIZE(NakedContainer);
+LVGL_OBJECT_ASSERT_SIZE(Container);
+LVGL_OBJECT_ASSERT_SIZE(Row);
+LVGL_OBJECT_ASSERT_SIZE(Column);
+
 NakedContainer::NakedContainer(const char *name) {
   construct_object(name);
   add_style("naked");

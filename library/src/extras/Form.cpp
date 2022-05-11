@@ -25,6 +25,8 @@ using namespace design;
 using namespace lvgl;
 using namespace var;
 
+LVGL_OBJECT_ASSERT_SIZE(Form);
+
 Form Form::find_form_parent(lvgl::Object child_object) {
   auto current = child_object.get_parent();
   while (true) {

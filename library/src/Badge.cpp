@@ -9,6 +9,8 @@
 using namespace design;
 using namespace lvgl;
 
+LVGL_OBJECT_ASSERT_SIZE(Badge);
+
 Badge::Badge(const char *name) {
   construct_object(name);
   add_style("badge").clear_flag(Flags::scrollable | Flags::clickable);

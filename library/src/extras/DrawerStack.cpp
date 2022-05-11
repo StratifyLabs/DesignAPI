@@ -8,6 +8,8 @@
 using namespace design;
 using namespace lvgl;
 
+LVGL_OBJECT_ASSERT_SIZE(DrawerStack);
+
 DrawerStack::DrawerStack(Data &data) {
   construct_object(data.cast_as_name());
   set_scroll_direction(lvgl::Direction::vertical);

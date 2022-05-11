@@ -17,11 +17,8 @@ public:
   LVGL_OBJECT_ACCESS_CONSTRUCT_FROM_OBJECT(NotificationToast);
 
   NotificationToast& set_title_as_static(const char * value);
-
   NotificationToast& set_title(const char * value);
-
   NotificationToast& set_message_as_static(const char * value);
-
   NotificationToast& set_message(const char * value);
 
 private:

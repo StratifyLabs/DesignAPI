@@ -7,6 +7,11 @@
 using namespace lvgl;
 using namespace design;
 
+LVGL_OBJECT_ASSERT_SIZE(Heading1);
+LVGL_OBJECT_ASSERT_SIZE(Heading2);
+LVGL_OBJECT_ASSERT_SIZE(Heading3);
+LVGL_OBJECT_ASSERT_SIZE(Heading4);
+
 Heading1::Heading1(const char *name, const char *title) {
   construct_label(name);
   api()->label_set_text_static(m_object, title);

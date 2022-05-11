@@ -27,8 +27,7 @@ public:
     API_PMAZ(title, Data, const char *, "title");
   };
 
-  Prompt(Data &data);
-  Prompt(lv_obj_t *object) { m_object = object; }
+  LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Prompt);
 
   Column get_content_column() const;
 

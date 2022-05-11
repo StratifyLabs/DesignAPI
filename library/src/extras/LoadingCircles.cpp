@@ -11,6 +11,9 @@
 using namespace lvgl;
 using namespace design;
 
+LVGL_OBJECT_ASSERT_SIZE(LoadingCircles);
+
+
 LoadingCircles::LoadingCircles(const char *name, lv_coord_t height) {
   construct_object(name);
 

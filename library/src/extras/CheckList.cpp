@@ -11,6 +11,8 @@
 using namespace design;
 using namespace lvgl;
 
+LVGL_OBJECT_ASSERT_SIZE(CheckList);
+
 CheckList::CheckList(const Data &user_data) {
   construct_list(user_data.cast_as_name());
   get<CheckList>().add_event_callback(EventCode::clicked, [](lv_event_t *e) {

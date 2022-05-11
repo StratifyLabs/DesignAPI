@@ -14,6 +14,8 @@ printer::Printer &printer::operator<<(Printer &printer, const design::Card &a) {
 using namespace design;
 using namespace lvgl;
 
+LVGL_OBJECT_ASSERT_SIZE(Card);
+
 Card::Card(const char *name) {
   construct_object(name);
   ObjectAccess<Card>::add_style("card");
