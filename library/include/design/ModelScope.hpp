@@ -25,7 +25,7 @@ public:
 
 private:
   static void deleter(Construct * construct);
-  using Pointer = std::unique_ptr<Construct, decltype(&deleter)>;
+  using Pointer = api::UniquePointer<Construct, decltype(&deleter)>;
   Pointer m_pointer;
 };
 
