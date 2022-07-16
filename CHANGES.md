@@ -2,4 +2,4 @@
 
 # Version 0.0.0
 
-This project is in a pre-release state.
+Pre-release Version. Works with LvglAPI v0.0 branch and WindowAPI v0.0.
