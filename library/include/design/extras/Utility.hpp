@@ -8,6 +8,7 @@
 #include <json/Json.hpp>
 #include <lvgl/Style.hpp>
 #include <var/StringView.hpp>
+#include <var/MagicEnum.hpp>
 
 namespace design {
 
@@ -18,6 +19,10 @@ public:
       &var::MagicEnum<Type>::to_string_view;
     static constexpr decltype(&var::MagicEnum<Type>::from_string_with_invalid)
       from_string = &var::MagicEnum<Type>::from_string_with_invalid;
+    //this is only OK because magic_enum string views are always null-terminated
+    static const char * to_cstring(Type type){
+      return to_string_view(type).data();
+    }
   };
 
   static constexpr auto property = Converter<lvgl::Property>{};
