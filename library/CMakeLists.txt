@@ -1,4 +1,3 @@
-# These are the depedencies
-set(LIBRARIES LvglAPI JsonAPI)
-
-api_add_api_library(DesignAPI "${LIBRARIES}")
+api2_add_library(
+  NAME DesignAPI
+  DEPENDENCIES LvglAPI JsonAPI)
