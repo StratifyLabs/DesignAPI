@@ -462,12 +462,14 @@ void Form::SelectFile::handle_clicked(lv_event_t *e) {
     return;
   }
 
+  //if incoming FileSystemCard data is dynamically allocated
+  //it can't be passed to another object recursively
   auto *new_data =
     file_system_data->needs_free() ? &FileSystemCard::Data::create() : file_system_data;
 
   if (new_data != file_system_data) {
     // if new data was created -- copy it
-    *new_data = *file_system_data;
+    new_data->copy(*file_system_data);
   }
 
   // create the modal

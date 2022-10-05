@@ -45,6 +45,30 @@ public:
     API_PMAZ(suffix_filter, Data, const char *, "");
     API_PMAZ(user_data, Data, void*, nullptr);
 
+
+
+    auto & copy(const Data & data){
+      animation_time = data.animation_time;
+      back_symbol = data.back_symbol;
+      base_path = data.base_path;
+      close_symbol = data.close_symbol;
+      directory_symbol = data.directory_symbol;
+#if defined __link
+      drop_symbol = data.drop_symbol;
+#endif
+      file_symbol = data.file_symbol;
+      full_path = data.full_path;
+      is_absolute_path = data.is_absolute_path;
+      is_select_file = data.is_select_file;
+      is_select_folder = data.is_select_folder;
+      is_show_hidden = data.is_show_hidden;
+      notify_status = data.notify_status;
+      relative_path = data.relative_path;
+      selected_file = data.selected_file;
+      suffix_filter = data.suffix_filter;
+      user_data = data.user_data;
+      return *this;
+    }
   private:
     friend FileSystemCard;
     void enter_directory(var::StringView name);
