@@ -44,6 +44,7 @@ public:
   static constexpr auto opacity = Converter<lvgl::Opacity>{};
   static constexpr auto property_group = Converter<lvgl::PropertyGroup>{};
   static constexpr auto property_type = Converter<lvgl::PropertyType>{};
+  static constexpr auto load_animation = Converter<lvgl::LoadAnimation>{};
 
 
   static constexpr auto invalid_property_type_class_name = "Invalid";
