@@ -60,7 +60,12 @@ FormList &FormList::add_item(const ItemData &item_data) {
 FormList& FormList::update_item_value(const char * item_name, const char * item_value){
   auto button = find<Button>(item_name);
   auto *c = button.user_data<ItemData>();
+  API_ASSERT(c);
+  printf("c:%p item:%p\n", &c->value, item_value);
+  printf("string is %s\n", c->value.cstring());
   c->value = item_value;
+  API_PRINTF_TRACE_LINE();
   button.find<Label>(value_name).set_text_as_static(c->value.cstring());
   return *this;
+
 }

@@ -69,13 +69,15 @@ public:
       user_data = data.user_data;
       return *this;
     }
+
+    void enter_directory(var::StringView name);
+    bool is_base_path() const;
+    void exit_directory();
+    var::PathString get_path_with_entry(var::StringView entry) const;
+    void update_full_path();
+
   private:
     friend FileSystemCard;
-    void enter_directory(var::StringView name);
-    var::PathString get_path_with_entry(var::StringView entry) const;
-    void exit_directory();
-    void update_full_path();
-    bool is_base_path() const;
   };
 
   explicit FileSystemCard(Data &data);
@@ -83,52 +85,6 @@ public:
 
   static const lv_obj_class_t *get_class() { return api()->window_class; }
 
-private:
-  struct Names {
-    static constexpr auto top_column = "TopColumn";
-    static constexpr auto header_row = "HeaderRow";
-    static constexpr auto content_area = "ContentArea";
-    static constexpr auto path_label = "PathLabel";
-
-    static constexpr auto back_button = "BackButton";
-    static constexpr auto cancel_button = "CancelButton";
-    static constexpr auto entry_list = "EntryList";
-    static constexpr auto file_details_table = "FileDetails";
-    static constexpr auto home_button = "HomeButton";
-    static constexpr auto root_drive_button = "RootDriveButton";
-    static constexpr auto select_button = "SelectButton";
-
-#if defined __link
-    DESIGN_DECLARE_NAME(drop_button);
-    DESIGN_DECLARE_NAME(drop_zone);
-#endif
-  };
-
-  FileSystemCard & update_path(var::StringView path);
-  lvgl::Generic get_content() const {
-    return find<lvgl::Generic>(Names::content_area);
-  }
-
-  FileSystemCard& update_back_button();
-
-  FileSystemCard & load_content();
-
-
-  static void configure_details(lvgl::Generic container);
-  static void configure_list(lvgl::Generic container);
-  static void back_button_pressed(lv_event_t*e);
-  static void select_button_pressed(lv_event_t*e);
-  static void cancel_button_pressed(lv_event_t*e);
-#if defined __link
-  static void drop_file(lv_event_t*e);
-  static void drop_text(lv_event_t*e);
-  static void drop_button_pressed(lv_event_t*e);
-#endif
-
-  static FileSystemCard get_fs_card(lvgl::Object child);
-
-  static fs::FileSystem::IsExclude is_exclude(const var::StringView name, void *data);
-  static void item_clicked(lv_event_t*e);
 };
 
 } // namespace design
