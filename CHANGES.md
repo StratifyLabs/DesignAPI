@@ -2,8 +2,7 @@
 
 # Version 1.0.0
 
-- Initial release (not released yet)
-
+- Initial release
 
 # Version 0.0.0
 
