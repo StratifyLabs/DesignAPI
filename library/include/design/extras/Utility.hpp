@@ -5,12 +5,15 @@
 #ifndef DESIGNLAB_UTILITY_HPP
 #define DESIGNLAB_UTILITY_HPP
 
+#if defined __link
+
 #include <json/Json.hpp>
 #include <lvgl/Style.hpp>
 #include <var/StringView.hpp>
 #include <var/MagicEnum.hpp>
 
 namespace design {
+
 
 class Utility {
 public:
@@ -282,5 +285,7 @@ public:
 };
 
 } // namespace design
+
+#endif
 
 #endif // DESIGNLAB_UTILITY_HPP
