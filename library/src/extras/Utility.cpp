@@ -2,6 +2,8 @@
 // Created by Tyler Gilbert on 3/4/22.
 //
 
+#if defined __link
+
 #include <lvgl/macros.hpp>
 #include <var/MagicEnum.hpp>
 
@@ -162,3 +164,5 @@ Utility::property_value_to_string_view(PropertyValue value, PropertyType type) {
   }
   return "invalid";
 }
+
+#endif
