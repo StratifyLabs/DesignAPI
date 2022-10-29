@@ -5,6 +5,7 @@
 ## Bug Fixes
 
 - Remove `design::Utility` from Stratify OS build
+- Add version information to CMake
 
 # Version 1.0.0
 
