@@ -543,13 +543,15 @@ Form::IsValid Form::SelectFile::validate_value(Data *data) {
 
 Form::SelectFile &Form::SelectFile::set_value(const char *value) {
   auto *data = user_data<Data>();
-  const StringView value_string = StringView(value);
+  const auto value_string = StringView(value);
   auto text_area = find<lvgl::TextArea>(Names::selected_path_text_area);
-  if (!data->is_absolute_path && !data->base_path.is_empty()) {
-    if (value_string.find(data->base_path) == 0) {
+  if (!data->is_absolute_path && data->base_path.string_view()) {
+    if (value_string.starts_with(data->base_path)) {
       // strip the base path
       data->relative_path =
         value_string.get_substring_at_position(data->base_path.length());
+    } else {
+      data->relative_path = value;
     }
   } else {
     data->relative_path = value;
