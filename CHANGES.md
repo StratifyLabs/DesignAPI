@@ -1,5 +1,11 @@
 > Please see [Semantic Versioning on Github](https://blog.stratifylabs.dev/device/2021-07-12-Semantic-Versioning-and-Github/) for more details on managing the `CHANGES.md` file.
 
+# Version 1.0.2 (unreleased)
+
+## Bug Fixes
+
+- Fix path resolution in `design::Form`
+
 # Version 1.0.1 
 
 ## Bug Fixes
